@@ -1,5 +1,11 @@
 cmake_minimum_required (VERSION 3.31 FATAL_ERROR)
 
-project(BattleCity)
+set(PROJECT_NAME BattleCity)
 
-add_executable(BattleCity scr/main.cpp)
+project(${PROJECT_NAME})
+
+add_executable(${PROJECT_NAME} scr/main.cpp)
+
+add_subdirectory(external/glfw)
+
+target_link_libraries(${PROJECT_NAME} glfw)
