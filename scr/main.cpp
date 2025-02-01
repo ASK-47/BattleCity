@@ -2,6 +2,7 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 
+#include "Renderer/ShaderProgram.h"
 
 GLfloat points[] = {
     0.0f, 0.5f, 0.0f,
@@ -101,6 +102,7 @@ int main() {
     //Color thst fill Window
 	glClearColor(1, 1, 0, 1);
 
+    /*
     //Creating the vetrex shader
     GLuint vs = glCreateShader(GL_VERTEX_SHADER);//passing initial code to vertex shader
     glShaderSource(vs, 1, &vertex_shader, nullptr);//vs - shader id, 1- number of C-lines, &vertex_shader - adress if C-line, nullprt - ptr to array of widths
@@ -120,6 +122,15 @@ int main() {
     //Deleting vs and fs vertex after linking
     glDeleteShader(vs);
     glDeleteShader(fs);
+    */
+
+    std::string vertexShader(vertex_shader);
+    std::string fragmentShader(fragment_shader);
+    Renderer::ShaderProgram shaderProgram(vertexShader, fragment_shader);//ctor call
+    if (!shaderProgram.isCompiled()) {//in case of error 
+        std::cerr << "Can't create shader program!" << std::endl;
+        return -1;
+    }
 
     //Passing shaders into display adapter
     //Vetex Buffer Object (VBO)
@@ -169,7 +180,9 @@ int main() {
         
         //Chosing the shaders programm
 
-        glUseProgram(shader_programm);
+        //glUseProgram(shader_programm);
+        shaderProgram.use();
+
         glBindVertexArray(vao);//enable current vertex arrays object (VAO)
         glDrawArrays(GL_TRIANGLES,0, 3);//drawning vao
         //GL_TRIANGLES - type of vertex interpretation
