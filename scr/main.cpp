@@ -144,6 +144,11 @@ int main(int argc, char** argv ) {
         }
         */
 
+        //Load tecture
+        resourceManager.loadTexture("DefaultTexture", "res/textures/map_16x16.png");
+
+
+
         //Passing shaders into display adapter
         //Vetex Buffer Object (VBO)
         GLuint points_vbo = 0;//vbo id

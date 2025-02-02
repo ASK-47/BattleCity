@@ -12,6 +12,8 @@ add_executable(${PROJECT_NAME}
 
 	scr/Resources/ResourceManager.h
 	scr/Resources/ResourceManager.cpp
+
+	scr/Resources/stb_image.h
 )
 
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
