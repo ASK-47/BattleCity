@@ -25,5 +25,4 @@ namespace Renderer {
 		bool m_isCompiled = false;//flag to see colmpilation success
 		GLuint m_ID =0;
 	};
-
 }
