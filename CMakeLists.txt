@@ -14,6 +14,9 @@ add_executable(${PROJECT_NAME}
 	scr/Resources/ResourceManager.cpp
 
 	scr/Resources/stb_image.h
+	
+	scr/Renderer/Texture2D.h
+	scr/Renderer/Texture2D.cpp
 )
 
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
