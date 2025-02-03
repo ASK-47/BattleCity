@@ -12,6 +12,9 @@ namespace Renderer {
 		}
 		void use() const;
 
+		void setInt(const std::string& name, const GLint value);
+
+
 		ShaderProgram() = delete;//no default ctor
 		ShaderProgram(ShaderProgram&) = delete;//no-copy ctor
 		ShaderProgram& operator=(const ShaderProgram&) = delete;//no copy operator =

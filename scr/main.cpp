@@ -4,18 +4,25 @@
 
 #include "Renderer/ShaderProgram.h"
 #include "Resources/ResourceManager.h"
+#include "Renderer/Texture2D.h"
 
 
 GLfloat points[] = {
     0.0f, 0.5f, 0.0f,
     0.5f, -0.5f, 0.0f,
-    -0.5f, -0.5f, 0.0f,
+    -0.5f, -0.5f, 0.0f
 };
 
 GLfloat colors[] = {
     1.0f, 0.0f, 0.0f,
     0.0f, 1.0f, 0.0f,
-    0.0f, 0.0f, 1.0f,
+    0.0f, 0.0f, 1.0f
+};
+
+GLfloat texCord[] = {
+    0.5f, 1.0f,
+    1.0f, 0.0f,
+    0.0f, 0.0f
 };
 
 /*
@@ -145,7 +152,7 @@ int main(int argc, char** argv ) {
         */
 
         //Load tecture
-        resourceManager.loadTexture("DefaultTexture", "res/textures/map_16x16.png");
+        auto tex = resourceManager.loadTexture("DefaultTexture", "res/textures/map_16x16.png");
 
 
 
@@ -164,7 +171,13 @@ int main(int argc, char** argv ) {
         GLuint colors_vbo = 0;
         glGenBuffers(1, &colors_vbo);
         glBindBuffer(GL_ARRAY_BUFFER, colors_vbo);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(colors), colors, GL_STATIC_DRAW);
+
+        //Texture Buffer Object (TBO)
+        GLuint textCord_vbo = 0;
+        glGenBuffers(1, &textCord_vbo);
+        glBindBuffer(GL_ARRAY_BUFFER, textCord_vbo);
+
+        glBufferData(GL_ARRAY_BUFFER, sizeof(texCord), texCord, GL_STATIC_DRAW);
 
         //Creation of vertex arrays object (VAO)
         GLuint vao = 0;//vao id
@@ -188,6 +201,12 @@ int main(int argc, char** argv ) {
         glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
 
 
+        glEnableVertexAttribArray(2);//1 - position (location) for texture
+        glBindBuffer(GL_ARRAY_BUFFER, textCord_vbo);
+        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
+
+        pDefaultShaderProgram->use();
+
         /* Loop until the user closes the window */
        //rendering
         while (!glfwWindowShouldClose(pWindow))//cycle is stopped then the window is closed
@@ -200,8 +219,11 @@ int main(int argc, char** argv ) {
             //glUseProgram(shader_programm);
             //shaderProgram.use();
             pDefaultShaderProgram->use();
+            pDefaultShaderProgram->setInt("tex", 0);//0 slot
 
             glBindVertexArray(vao);//enable current vertex arrays object (VAO)
+            tex->bind();
+
             glDrawArrays(GL_TRIANGLES, 0, 3);//drawning vao
             //GL_TRIANGLES - type of vertex interpretation
             //0 - starting point in vec3

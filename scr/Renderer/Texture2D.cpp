@@ -12,15 +12,18 @@ namespace Renderer {
 		{
 		case 4://4 channels
 			m_mode = GL_RGBA;
-			[[fallthrough]];
+			break;;
 		case 3://3 channels
 			m_mode = GL_RGB;
-			[[fallthrough]];
+			break;;
 		default:
 			m_mode = GL_RGBA;
 			break;
 		}
 		glGenTextures(1, &m_ID);//texture generation
+		glActiveTexture(GL_TEXTURE0);
+
+
 		glBindTexture(GL_TEXTURE_2D, m_ID);//making genereted texture current
 		glTexImage2D(GL_TEXTURE_2D, 0, m_mode, m_width, m_height, 0, m_mode, GL_UNSIGNED_BYTE, data);
 
