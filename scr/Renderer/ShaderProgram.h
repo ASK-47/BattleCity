@@ -2,6 +2,8 @@
 #include <glad/glad.h>
 #include <string>
 
+#include<glm/mat4x4.hpp>
+
 namespace Renderer {
 	class ShaderProgram {
 	public:
@@ -14,6 +16,7 @@ namespace Renderer {
 
 		void setInt(const std::string& name, const GLint value);
 
+		void setMatrix4(const std::string& name, const glm::mat4& matrix);
 
 		ShaderProgram() = delete;//no default ctor
 		ShaderProgram(ShaderProgram&) = delete;//no-copy ctor
