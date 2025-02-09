@@ -1,6 +1,8 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+
 #include <iostream>
+#include <chrono>
 
 #include <glm/vec2.hpp>
 #include<glm/mat4x4.hpp>
@@ -10,6 +12,8 @@
 #include "Resources/ResourceManager.h"
 #include "Renderer/Texture2D.h"
 #include "Renderer/Sprite.h"
+
+#include "Renderer/AnimatedSprite.h"
 
 
 GLfloat points[] = {
@@ -54,6 +58,8 @@ const char* fragment_shader =
 
 glm::ivec2 g_windowSize(640, 480);
 
+bool isEagle = false;
+
 //Callback for changing window size
 void glfwWindowSizeCallback(GLFWwindow* pWindow, int width, int height) {
     g_windowSize.x = width;
@@ -62,20 +68,20 @@ void glfwWindowSizeCallback(GLFWwindow* pWindow, int width, int height) {
 }
 
 //Callback for pressing the keys
-void glfwKeyCallback(GLFWwindow* pWindow, int key, int scancode, int action, int mode) {
-    
-    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-    {
-        glfwSetWindowShouldClose(pWindow, GL_TRUE);//close the window        
-    }    
+void glfwKeyCallback(GLFWwindow* pWindow, int key, int scancode, int action, int mode) {    
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {//close the window by ESCAPE
+        glfwSetWindowShouldClose(pWindow, GL_TRUE);
+    }
+    if (key == GLFW_KEY_ENTER && action == GLFW_PRESS) {//activate isEagle by ENTER
+        isEagle = !isEagle;
+    }
 }
 
 int main(int argc, char** argv) {    
 
     /* Initialize the library */
     //check that library was init
-    if (!glfwInit())
-    {
+    if (!glfwInit()) {
         std::cout << "glfwInit failed" << std::endl;
         return -1;
     }
@@ -88,8 +94,7 @@ int main(int argc, char** argv) {
     /* Create a windowed mode window and its OpenGL context */
     GLFWwindow* pWindow = glfwCreateWindow(g_windowSize.x, g_windowSize.y, "Battle City", nullptr, nullptr);
     //check that window was created
-    if (!pWindow)
-    {
+    if (!pWindow) {
         std::cout << "glfwCreateWindow failed" << std::endl;
         glfwTerminate();
         return -1;
@@ -166,11 +171,69 @@ int main(int argc, char** argv) {
 
         //Load sprite
         //auto pSprite = resourceManager.loadSprite("NewSprite", "Default Texture", "SpriteShader", 50, 100);
-        std::vector<std::string> subTexturesNames = { "block", "topBlock", "bottomBlock", "leftBlock", "rightBlock", "topLeftBlock", "topRightBlock", "bottomLeftBlock", "bottomRightBlock", "beton" };
+        //std::vector<std::string> subTexturesNames = { "block", "topBlock", "bottomBlock", "leftBlock", "rightBlock", "topLeftBlock", "topRightBlock", "bottomLeftBlock", "bottomRightBlock", "beton" };
+        
+        std::vector<std::string> subTexturesNames = {
+            "block",
+            "topBlock",
+            "bottomBlock",
+            "leftBlock",
+            "rightBlock",
+            "topLeftBlock",
+            "topRightBlock",
+            "bottomLeftBlock",
+            "bottomRightBlock",
+            
+            "beton",
+            "topBeton",
+            "bottomBeton",
+            "leftBeton",
+            "rightBeton",
+            "topLeftBeton",
+            "topRightBeton",
+            "bottomLeftBeton",
+            "bottomRightBeton",
+
+            "water1",
+            "water2",
+            "water3",
+            
+            "trees",
+            "ice",
+            "wall",
+
+            "eagle",
+            "deadEagle",
+            
+            "nothing",
+            "respawn1",
+            "respawn2",
+            "respawn3",
+            "respawn4"
+        };      
+                
         auto pTextureAtlas = resourceManager.loadTextureAtlas("DefaultTextureAtlas", "res/textures/map_16x16.png", std::move(subTexturesNames), 16, 16);
         
-        auto pSprite = resourceManager.loadSprite("NewSprite", "DefaultTextureAtlas", "SpriteShader", 100, 100, "block");
-        pSprite->setPosition(glm::vec2(300, 100));
+        auto pSprite = resourceManager.loadSprite("NewSprite", "DefaultTextureAtlas", "SpriteShader", 100, 100, "beton");
+        pSprite->setPosition(glm::vec2(300, 100));//set position for static sprite
+
+        auto pAnimatedSprite = resourceManager.loadAnimatedSprite("NewAnimatedSprite", "DefaultTextureAtlas", "SpriteShader", 100, 100, "beton");//init subtexture for animated sprite
+        pAnimatedSprite->setPosition(glm::vec2(300, 300));//set position for animated sprite
+
+        std::vector<std::pair<std::string, uint64_t>> waterState;//new subtxture for animated sprite
+        waterState.emplace_back(std::make_pair<std::string, uint64_t>("water1", 1000000000));
+        waterState.emplace_back(std::make_pair<std::string, uint64_t>("water2", 1000000000));
+        waterState.emplace_back(std::make_pair<std::string, uint64_t>("water3", 1000000000));
+        
+        std::vector<std::pair<std::string, uint64_t>> eagleState;//new subtxture for animated sprite
+        eagleState.emplace_back(std::make_pair<std::string, uint64_t>("eagle", 1000000000));
+        eagleState.emplace_back(std::make_pair<std::string, uint64_t>("deadEagle", 1000000000));
+        
+        //insert of states
+        pAnimatedSprite->insertState("waterState", std::move(waterState));
+        pAnimatedSprite->insertState("eagleState", std::move(eagleState));
+
+        pAnimatedSprite->setState("waterState");
 
         //Passing shaders into display adapter
         //Vetex Buffer Object (VBO)
@@ -234,8 +297,9 @@ int main(int argc, char** argv) {
         modelMatrix_2 = glm::translate(modelMatrix_2, glm::vec3(590.f, 50.f, 0.f));
 
         glm::mat4 projectlMatrix = glm::ortho(0.f, static_cast<float>(g_windowSize.x), 0.f, static_cast<float>(g_windowSize.y), -100.f, 100.f);
-        
         pDefaultShaderProgram->setMatrix4("projectionMat", projectlMatrix);
+
+        auto lastTime = std::chrono::high_resolution_clock::now();
 
         pSpriteShaderProgram->use();
         pSpriteShaderProgram->setInt("tex", 0);//0 set into slot 0
@@ -245,6 +309,18 @@ int main(int argc, char** argv) {
        //rendering
         while (!glfwWindowShouldClose(pWindow))//cycle is stopped then the window is closed
         {
+            if (isEagle) {
+                pAnimatedSprite->setState("eagleState");
+            }
+            else {
+                pAnimatedSprite->setState("waterState");
+            }
+            //update
+            auto currentTime = std::chrono::high_resolution_clock::now();
+            uint64_t duration = std::chrono::duration_cast<std::chrono::nanoseconds>(currentTime - lastTime).count();//while cycle duration
+            lastTime = currentTime;//start 
+            pAnimatedSprite->update(duration);//update every cycle
+            
             /* Render here */
             glClear(GL_COLOR_BUFFER_BIT);//frame rendering (clearing the screen)
 
@@ -267,7 +343,9 @@ int main(int argc, char** argv) {
             pDefaultShaderProgram->setMatrix4("modelMat", modelMatrix_2);
             glDrawArrays(GL_TRIANGLES, 0, 3);
 
-            pSprite->render();
+            pSprite->render();//render static sprite
+
+            pAnimatedSprite->render();//render animated sprite
 
             /* Swap front and back buffers */
             glfwSwapBuffers(pWindow);//changing front and back buffer frames
