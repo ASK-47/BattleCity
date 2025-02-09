@@ -17,6 +17,9 @@ add_executable(${PROJECT_NAME}
 	
 	scr/Renderer/Texture2D.h
 	scr/Renderer/Texture2D.cpp
+
+	scr/Renderer/Sprite.h
+	scr/Renderer/Sprite.cpp
 )
 
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)

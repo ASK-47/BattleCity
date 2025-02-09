@@ -6,11 +6,10 @@
 #include<glm/mat4x4.hpp>
 #include<glm/gtc/matrix_transform.hpp>
 
-
 #include "Renderer/ShaderProgram.h"
 #include "Resources/ResourceManager.h"
 #include "Renderer/Texture2D.h"
-
+#include "Renderer/Sprite.h"
 
 
 GLfloat points[] = {
@@ -25,7 +24,7 @@ GLfloat colors[] = {
     0.0f, 0.0f, 1.0f
 };
 
-GLfloat texCord[] = {
+GLfloat texCoord[] = {
     0.5f, 1.0f,
     1.0f, 0.0f,
     0.0f, 0.0f
@@ -59,7 +58,7 @@ glm::ivec2 g_windowSize(640, 480);
 void glfwWindowSizeCallback(GLFWwindow* pWindow, int width, int height) {
     g_windowSize.x = width;
     g_windowSize.y = height;
-    glad_glViewport(0, 0, g_windowSize.x, g_windowSize.y);//coordinates and size of window for rendrering
+    glViewport(0, 0, g_windowSize.x, g_windowSize.y);//coordinates and size of window for rendrering
 }
 
 //Callback for pressing the keys
@@ -71,7 +70,7 @@ void glfwKeyCallback(GLFWwindow* pWindow, int key, int scancode, int action, int
     }    
 }
 
-int main(int argc, char** argv ) {    
+int main(int argc, char** argv) {    
 
     /* Initialize the library */
     //check that library was init
@@ -82,10 +81,10 @@ int main(int argc, char** argv ) {
     }
 
     //We want to use GLFW 4..6  and OPEN GL core profile
-    glfwWindowHint(GLFW_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_VERSION_MINOR, 6);
-    glfwWindowHint(GLFW_OPENGL_ANY_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);    
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    
     /* Create a windowed mode window and its OpenGL context */
     GLFWwindow* pWindow = glfwCreateWindow(g_windowSize.x, g_windowSize.y, "Battle City", nullptr, nullptr);
     //check that window was created
@@ -156,10 +155,22 @@ int main(int argc, char** argv ) {
         }
         */
 
-        //Load tecture
+        auto pSpriteShaderProgram = resourceManager.loadShaders("SpriteShader", "res/shaders/vSprite.txt", "res/shaders/fSprite.txt");
+        if (!pSpriteShaderProgram) {
+            std::cerr << "Can't create shader program: " << "SpriteShader" << std::endl;
+            return -1;
+        }
+
+        //Load texture
         auto tex = resourceManager.loadTexture("DefaultTexture", "res/textures/map_16x16.png");
 
-
+        //Load sprite
+        //auto pSprite = resourceManager.loadSprite("NewSprite", "Default Texture", "SpriteShader", 50, 100);
+        std::vector<std::string> subTexturesNames = { "block", "topBlock", "bottomBlock", "leftBlock", "rightBlock", "topLeftBlock", "topRightBlock", "bottomLeftBlock", "bottomRightBlock", "beton" };
+        auto pTextureAtlas = resourceManager.loadTextureAtlas("DefaultTextureAtlas", "res/textures/map_16x16.png", std::move(subTexturesNames), 16, 16);
+        
+        auto pSprite = resourceManager.loadSprite("NewSprite", "DefaultTextureAtlas", "SpriteShader", 100, 100, "block");
+        pSprite->setPosition(glm::vec2(300, 100));
 
         //Passing shaders into display adapter
         //Vetex Buffer Object (VBO)
@@ -181,8 +192,7 @@ int main(int argc, char** argv ) {
         GLuint textCord_vbo = 0;
         glGenBuffers(1, &textCord_vbo);
         glBindBuffer(GL_ARRAY_BUFFER, textCord_vbo);
-
-        glBufferData(GL_ARRAY_BUFFER, sizeof(texCord), texCord, GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(texCoord), texCoord, GL_STATIC_DRAW);
 
         //Creation of vertex arrays object (VAO)
         GLuint vao = 0;//vao id
@@ -205,7 +215,6 @@ int main(int argc, char** argv ) {
         glBindBuffer(GL_ARRAY_BUFFER, colors_vbo);
         glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
 
-
         glEnableVertexAttribArray(2);//1 - position (location) for texture
         glBindBuffer(GL_ARRAY_BUFFER, textCord_vbo);
         glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
@@ -220,15 +229,17 @@ int main(int argc, char** argv ) {
         //2 moving of matrix (matrix transform from world space to view space) == identity matrix (nothing to transform)
         //3 moving of matrix (matrix transform from view space to clip space)
 
-
         glm::mat4 modelMatrix_2 = glm::mat4(1.f);
         //1 moving of matrix (model matrix transform from local space to world space)
         modelMatrix_2 = glm::translate(modelMatrix_2, glm::vec3(590.f, 50.f, 0.f));
 
         glm::mat4 projectlMatrix = glm::ortho(0.f, static_cast<float>(g_windowSize.x), 0.f, static_cast<float>(g_windowSize.y), -100.f, 100.f);
+        
         pDefaultShaderProgram->setMatrix4("projectionMat", projectlMatrix);
 
-
+        pSpriteShaderProgram->use();
+        pSpriteShaderProgram->setInt("tex", 0);//0 set into slot 0
+        pSpriteShaderProgram->setMatrix4("projectionMat", projectlMatrix);
 
         /* Loop until the user closes the window */
        //rendering
@@ -241,7 +252,7 @@ int main(int argc, char** argv ) {
 
             //glUseProgram(shader_programm);
             //shaderProgram.use();
-            //pDefaultShaderProgram->use();
+            pDefaultShaderProgram->use();
             //pDefaultShaderProgram->setInt("tex", 0);//0 slot
 
             glBindVertexArray(vao);//enable current vertex arrays object (VAO)
@@ -255,6 +266,8 @@ int main(int argc, char** argv ) {
 
             pDefaultShaderProgram->setMatrix4("modelMat", modelMatrix_2);
             glDrawArrays(GL_TRIANGLES, 0, 3);
+
+            pSprite->render();
 
             /* Swap front and back buffers */
             glfwSwapBuffers(pWindow);//changing front and back buffer frames
