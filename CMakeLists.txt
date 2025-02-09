@@ -22,7 +22,10 @@ add_executable(${PROJECT_NAME}
 	scr/Renderer/Sprite.cpp
 
 	scr/Renderer/AnimatedSprite.h
-	scr/Renderer/AnimatedSprite.cpp	
+	scr/Renderer/AnimatedSprite.cpp
+
+	scr/Game/Game.h
+	scr/Game/Game.cpp
 )
 
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
