@@ -52,17 +52,24 @@ namespace Renderer {
     void AnimatedSprite::render() const {
         if (m_dirty) {//we change buffer of coordinates if only frame is changed
             auto subTexture = m_pTexture->getSubTexture(m_pCurrentAnimationDurations->second[m_currentFrame].first);
-            const GLfloat textureCoords[] = {//get new coordinates of the subtecture U  V
-                subTexture.leftBottomUV.x, subTexture.leftBottomUV.y,
-                subTexture.leftBottomUV.x, subTexture.rightTopUV.y,
-                subTexture.rightTopUV.x,   subTexture.rightTopUV.y,
-                subTexture.rightTopUV.x,   subTexture.rightTopUV.y,
-                subTexture.rightTopUV.x,   subTexture.leftBottomUV.y,
-                subTexture.leftBottomUV.x, subTexture.leftBottomUV.y
+            //const GLfloat textureCoords[] = {//get new coordinates of the subtecture U  V
+            //    subTexture.leftBottomUV.x, subTexture.leftBottomUV.y,
+            //    subTexture.leftBottomUV.x, subTexture.rightTopUV.y,
+            //    subTexture.rightTopUV.x,   subTexture.rightTopUV.y,
+            //    subTexture.rightTopUV.x,   subTexture.rightTopUV.y,
+            //    subTexture.rightTopUV.x,   subTexture.leftBottomUV.y,
+            //    subTexture.leftBottomUV.x, subTexture.leftBottomUV.y
+            const GLfloat textureCoords[] = {                    
+                    subTexture.leftBottomUV.x, subTexture.leftBottomUV.y,
+                    subTexture.leftBottomUV.x, subTexture.rightTopUV.y,
+                    subTexture.rightTopUV.x, subTexture.rightTopUV.y,                    		
+                    subTexture.rightTopUV.x, subTexture.leftBottomUV.y
             };            
-            glBindBuffer(GL_ARRAY_BUFFER, m_textureCoordsVBO);//bind buffer
-            glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(textureCoords), &textureCoords);//pass coordinates to buffer
-            glBindBuffer(GL_ARRAY_BUFFER, 0);//debind buffer
+            
+            //glBindBuffer(GL_ARRAY_BUFFER, m_textureCoordsVBO);//bind buffer //removed to VertexBuffer::update
+            //glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(textureCoords), &textureCoords);//pass coordinates to buffer//removed to VertexBuffer::update
+            //glBindBuffer(GL_ARRAY_BUFFER, 0);//debind buffer//removed to VertexBuffer::unbind
+            m_textureCoordsBuffer.update(textureCoords, 2 * 4 * sizeof(GLfloat));
             m_dirty = false;
         }
         Sprite::render();//invoke render from base class

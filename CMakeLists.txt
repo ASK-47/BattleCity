@@ -24,8 +24,17 @@ add_executable(${PROJECT_NAME}
 	scr/Renderer/AnimatedSprite.h
 	scr/Renderer/AnimatedSprite.cpp
 
+	scr/Renderer/VertexBuffer.h
+	scr/Renderer/VertexBuffer.cpp
+
+	scr/Renderer/IndexBuffer.h
+	scr/Renderer/IndexBuffer.cpp	
+
 	scr/Game/Game.h
 	scr/Game/Game.cpp
+	
+	scr/Game/Tank.h
+	scr/Game/Tank.cpp
 )
 
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
