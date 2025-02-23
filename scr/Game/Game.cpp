@@ -56,19 +56,33 @@ void Game::setKey(const int key, const int action) {
 }
 
 bool Game::init() {
-    auto pDefaultShaderProgram = ResourceManager::loadShaders("DefaultShader", "res/shaders/vertex.txt", "res/shaders/fragment.txt");    
-    if (!pDefaultShaderProgram) {
+    //auto pDefaultShaderProgram = ResourceManager::loadShaders("DefaultShader", "res/shaders/vertex.txt", "res/shaders/fragment.txt");    
+    //if (!pDefaultShaderProgram)    
+    ResourceManager::loadJSONResources("res/resources.json");
+    auto pSpriteShaderProgram = ResourceManager::getShaderProgram("spriteShader");
+    if (!pSpriteShaderProgram) {
         std::cerr << "Can't create shader program: " << "DefaultShader" << std::endl;
         return false;//-1 was changed for false
     }
 
-    auto pSpriteShaderProgram = ResourceManager::loadShaders("SpriteShader", "res/shaders/vSprite.txt", "res/shaders/fSprite.txt");    
-    if (!pSpriteShaderProgram) {
-        std::cerr << "Can't create shader program: " << "SpriteShader" << std::endl;
+    //auto pSpriteShaderProgram = ResourceManager::loadShaders("spriteShader", "res/shaders/vSprite.txt", "res/shaders/fSprite.txt");    
+    //if (!pSpriteShaderProgram)
+    
+    auto pTextureAtlas = ResourceManager::getTexture("mapTextureAtlas");
+    if (!pTextureAtlas) {
+        std::cerr << "Can't find texture atlas: " << "mapTextureAtlas" << std::endl;
+        return false;
+    }
+
+    auto pTanksTextureAtlas = ResourceManager::getTexture("tanksTextureAtlas");
+    if (!pTanksTextureAtlas) {
+        //std::cerr << "Can't create shader program: " << "spriteShader" << std::endl;
+        //std::cerr << "Can't find shader program: " << "spriteShader" << std::endl;
+        std::cerr << "Can't find texture atlas: " << "tanksTextureAtlas" << std::endl;
         return false;//-1 was changed for false
     }
     
-    auto tex = ResourceManager::loadTexture("DefaultTexture", "res/textures/map_16x16.png");
+    /* auto tex = ResourceManager::loadTexture("DefaultTexture", "res/textures/map_16x16.png");
     
     std::vector<std::string> subTexturesNames = {
         "block",
@@ -106,7 +120,9 @@ bool Game::init() {
 
     auto pTextureAtlas = ResourceManager::loadTextureAtlas("DefaultTextureAtlas", "res/textures/map_16x16.png", std::move(subTexturesNames), 16, 16);
     
-    auto pAnimatedSprite = ResourceManager::loadAnimatedSprite("NewAnimatedSprite", "DefaultTextureAtlas", "SpriteShader", 100, 100, "beton");    
+    auto pAnimatedSprite = ResourceManager::loadAnimatedSprite("NewAnimatedSprite", "DefaultTextureAtlas", "spriteShader", 100, 100, "beton"); */   
+    
+    auto pAnimatedSprite = ResourceManager::loadAnimatedSprite("NewAnimatedSprite", "mapTextureAtlas", "spriteShader", 100, 100, "beton");    
     pAnimatedSprite->setPosition(glm::vec2(300, 300));
     
     std::vector<std::pair<std::string, uint64_t>> waterState;    
@@ -123,25 +139,25 @@ bool Game::init() {
     
     pAnimatedSprite->setState("waterState");
     
-    pDefaultShaderProgram->use();
-    pDefaultShaderProgram->setInt("tex", 0);
+    //pDefaultShaderProgram->use();
+    //pDefaultShaderProgram->setInt("tex", 0);
     
-    glm::mat4 modelMatrix_1 = glm::mat4(1.f);
-    modelMatrix_1 = glm::translate(modelMatrix_1, glm::vec3(100.f, 50.f, 0.f));
+    //glm::mat4 modelMatrix_1 = glm::mat4(1.f);
+    //modelMatrix_1 = glm::translate(modelMatrix_1, glm::vec3(100.f, 50.f, 0.f));
     
-    glm::mat4 modelMatrix_2 = glm::mat4(1.f);
-    modelMatrix_2 = glm::translate(modelMatrix_2, glm::vec3(590.f, 50.f, 0.f));
+   // glm::mat4 modelMatrix_2 = glm::mat4(1.f);
+    //modelMatrix_2 = glm::translate(modelMatrix_2, glm::vec3(590.f, 50.f, 0.f));
     
     glm::mat4 projectionMatrix = glm::ortho(0.f, static_cast<float>(m_windowSize.x), 0.f, static_cast<float>(m_windowSize.y), -100.f, 100.f);
     
-    pDefaultShaderProgram->setMatrix4("projectionMat", projectionMatrix);
+    //pDefaultShaderProgram->setMatrix4("projectionMat", projectionMatrix);
     pSpriteShaderProgram->use();
     
     pSpriteShaderProgram->setInt("tex", 0);
     pSpriteShaderProgram->setMatrix4("projectionMat", projectionMatrix);
 
 
-    std::vector<std::string> tanksSubTexturesNames = {
+    /*std::vector<std::string> tanksSubTexturesNames = {
        "tankTop1",
        "tankTop2",
        "tankLeft1",
@@ -153,7 +169,7 @@ bool Game::init() {
     };
 
     auto pTanksTextureAtlas = ResourceManager::loadTextureAtlas("TanksTextureAtlas", "res/textures/tanks.png", std::move(tanksSubTexturesNames), 16, 16);
-    auto pTanksAnimatedSprite = ResourceManager::loadAnimatedSprite("TanksAnimatedSprite", "TanksTextureAtlas", "SpriteShader", 100, 100, "tankTop1");
+    auto pTanksAnimatedSprite = ResourceManager::loadAnimatedSprite("TanksAnimatedSprite", "TanksTextureAtlas", "spriteShader", 100, 100, "tankTop1");
     
     std::vector<std::pair<std::string, uint64_t>> tankTopState;//animated up
     tankTopState.emplace_back(std::make_pair<std::string, uint64_t>("tankTop1", 500000000));
@@ -179,8 +195,14 @@ bool Game::init() {
 
     pTanksAnimatedSprite->insertState("tankRightState", std::move(tankRightState));
 
-    pTanksAnimatedSprite->setState("tankTopState");//starting state
-    
+    pTanksAnimatedSprite->setState("tankTopState");//starting state*/
+
+    auto pTanksAnimatedSprite = ResourceManager::getAnimatedSprite("tankAnimatedSprite");
+    if (!pTanksAnimatedSprite) {
+        std::cerr << "Can't find animated sprite: " << "tankAnimatedSprite" << std::endl;
+        return false;
+    }
+
     m_pTank = std::make_unique<Tank>(pTanksAnimatedSprite, 0.0000001f, glm::vec2(100.f, 100.f));
 
     return true;//INIT SUCCESS
