@@ -11,6 +11,7 @@
 
 //TO READ EXE-PATH, TO UNLOAD RESOURCES
 #include "Resources/ResourceManager.h"
+#include "Renderer/Renderer.h"
 
 //==========================================================
 // REMOVED TO Game.cpp => bool Game::init()// 
@@ -78,7 +79,8 @@ Game g_game(g_windowSize);//start
 void glfwWindowSizeCallback(GLFWwindow* pWindow, int width, int height) {
     g_windowSize.x = width;
     g_windowSize.y = height;
-    glViewport(0, 0, g_windowSize.x, g_windowSize.y);//coordinates and size of window for rendrering
+    //glViewport(0, 0, g_windowSize.x, g_windowSize.y);//coordinates and size of window for rendrering
+    RenderEngine::Renderer::setViewport(width, height);
 }
 
 //Callback for pressing the keys
@@ -129,16 +131,20 @@ int main(int argc, char** argv) {
 	}		
 	
     //Info about device
-    std::cout << "Render: " << glGetString(GL_RENDERER) << std::endl;
+    //std::cout << "Render: " << glGetString(GL_RENDERER) << std::endl;
+    std::cout << "Renderer: " << RenderEngine::Renderer::getRendererStr() << std::endl;
     
     //Info about OpenGL version
-    std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
-	//std::cout << "OpenGL" << GLVersion.major << "." << GLVersion.minor << std::endl;
-	
+    //std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
+	//std::cout << "OpenGL" << GLVersion.major << "." << GLVersion.minor << std::endl;	 
+    std::cout << "OpenGL version: " << RenderEngine::Renderer::getVersionStr() << std::endl;
+
     //Color thst fill Window
     //glClearColor(1, 1, 0, 1);    
     //COLOUR WAS CHANGED FOR BLACK
-    glClearColor(0, 0, 0, 1);
+    
+    //glClearColor(0, 0, 0, 1);
+    RenderEngine::Renderer::setClearColor(0, 0, 0, 1);
 
     //==========================================================
     // DO NOT NEED SINGLE TRIANGLE ANY MORE
@@ -352,6 +358,9 @@ int main(int argc, char** argv) {
             }*/
             //==========================================================
             
+            /* Poll for and process events */
+            glfwPollEvents();//press the key, changing pos of cursor, closing the window, changing size of the window
+
             //update
             auto currentTime = std::chrono::high_resolution_clock::now();
             uint64_t duration = std::chrono::duration_cast<std::chrono::nanoseconds>(currentTime - lastTime).count();//while cycle duration
@@ -360,7 +369,8 @@ int main(int argc, char** argv) {
             g_game.update(duration);
             
             /* Render here */
-            glClear(GL_COLOR_BUFFER_BIT);//frame rendering (clearing the screen)
+            //glClear(GL_COLOR_BUFFER_BIT);//frame rendering (clearing the screen)
+            RenderEngine::Renderer::clear();
 
 
             //==========================================================
@@ -396,9 +406,7 @@ int main(int argc, char** argv) {
 
             /* Swap front and back buffers */
             glfwSwapBuffers(pWindow);//changing front and back buffer frames
-
-            /* Poll for and process events */
-            glfwPollEvents();//press the key, changing pos of cursor, closing the window, changing size of the window
+            
         }
         ResourceManager::unloadAllResources();
     }

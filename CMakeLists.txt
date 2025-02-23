@@ -27,9 +27,18 @@ add_executable(${PROJECT_NAME}
 	scr/Renderer/VertexBuffer.h
 	scr/Renderer/VertexBuffer.cpp
 
-	scr/Renderer/IndexBuffer.h
-	scr/Renderer/IndexBuffer.cpp	
+	scr/Renderer/VertexArray.h
+	scr/Renderer/VertexArray.cpp
 
+	scr/Renderer/VertexBufferLayout.h
+	scr/Renderer/VertexBufferLayout.cpp
+
+	scr/Renderer/Renderer.h
+	scr/Renderer/Renderer.cpp
+	
+	scr/Renderer/IndexBuffer.h
+	scr/Renderer/IndexBuffer.cpp
+	
 	scr/Game/Game.h
 	scr/Game/Game.cpp
 	

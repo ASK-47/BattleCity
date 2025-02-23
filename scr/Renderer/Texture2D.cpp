@@ -1,7 +1,7 @@
 #include "Texture2D.h"
 
 //loading textures to video adapter
-namespace Renderer {
+namespace RenderEngine {
 	Texture2D::Texture2D(const GLint width, GLint height,
 		const unsigned char* data,
 		const unsigned int channels,

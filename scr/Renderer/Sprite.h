@@ -9,9 +9,10 @@
 
 #include<string>
 
+#include "VertexArray.h"
 
 //loading textures to video adapter
-namespace Renderer {
+namespace RenderEngine {
 	class Texture2D;
 	class ShaderProgram;
 
@@ -43,13 +44,14 @@ namespace Renderer {
 		glm::vec2 m_position;
 		glm::vec2 m_size;
 		float m_rotation;
-		GLuint m_VAO;
+		//GLuint m_VAO;
 
 		//Buffers:
 		//GLuint m_vertexCoordsVBO;//buffer for coordinates //=>_vertexCoordsBuffer
 		//GLuint m_textureCoordsVBO;//buffer for textures// => m_textureCoordsBuffer
 		//GLuint m_EBO;//(ELEMENT BUFFER OBJECT)//buffer for indexes => m_indexBuffer
 
+		VertexArray m_vertexArray;
 		VertexBuffer m_vertexCoordsBuffer;
 		VertexBuffer m_textureCoordsBuffer;
 		IndexBuffer m_indexBuffer;

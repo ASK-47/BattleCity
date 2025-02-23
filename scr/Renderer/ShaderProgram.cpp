@@ -4,7 +4,7 @@
 #include<glm/gtc/type_ptr.hpp>
 
 
-namespace Renderer {
+namespace RenderEngine {
 	ShaderProgram::ShaderProgram(const std::string& vertexShader, const std::string& fragmentShader) {
 		//Creating the vetrex shader
 		//GLuint vs = glCreateShader(GL_VERTEX_SHADER);//passing initial code to vertex shader

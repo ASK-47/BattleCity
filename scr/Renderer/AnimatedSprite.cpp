@@ -2,7 +2,7 @@
 #include "Texture2D.h"
 #include <iostream>
 
-namespace Renderer {
+namespace RenderEngine {
     AnimatedSprite::AnimatedSprite(std::shared_ptr<Texture2D> pTexture
         , std::string initialSubTexture
         , std::shared_ptr<ShaderProgram> pShaderProgram
@@ -61,9 +61,10 @@ namespace Renderer {
             //    subTexture.leftBottomUV.x, subTexture.leftBottomUV.y
             const GLfloat textureCoords[] = {                    
                     subTexture.leftBottomUV.x, subTexture.leftBottomUV.y,
-                    subTexture.leftBottomUV.x, subTexture.rightTopUV.y,
-                    subTexture.rightTopUV.x, subTexture.rightTopUV.y,                    		
-                    subTexture.rightTopUV.x, subTexture.leftBottomUV.y
+                    subTexture.leftBottomUV.x, subTexture.rightTopUV.y,              
+                    subTexture.rightTopUV.x, subTexture.rightTopUV.y,
+                    subTexture.rightTopUV.x, subTexture.leftBottomUV.y,
+
             };            
             
             //glBindBuffer(GL_ARRAY_BUFFER, m_textureCoordsVBO);//bind buffer //removed to VertexBuffer::update

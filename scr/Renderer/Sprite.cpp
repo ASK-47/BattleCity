@@ -2,11 +2,12 @@
 
 #include "ShaderProgram.h"
 #include "Texture2D.h"
+#include "Renderer.h"
 
 #include<glm/mat4x4.hpp>
 #include<glm/gtc/matrix_transform.hpp>
 
-namespace Renderer {
+namespace RenderEngine {
 	Sprite::Sprite(std::shared_ptr<Texture2D> pTexture
 		, std::string initialSubTexture
 		, std::shared_ptr<ShaderProgram> pShaderProgram
@@ -49,8 +50,7 @@ namespace Renderer {
 		subTexture.leftBottomUV.x, subTexture.leftBottomUV.y,
 		subTexture.leftBottomUV.x, subTexture.rightTopUV.y,
 		subTexture.rightTopUV.x, subTexture.rightTopUV.y,
-		//1.0f, 0.0f,//3				
-		subTexture.rightTopUV.x, subTexture.leftBottomUV.y
+		subTexture.rightTopUV.x, subTexture.leftBottomUV.y,
 		};
 
 		const GLint indexes[] = {
@@ -66,8 +66,8 @@ namespace Renderer {
 
 
 	//Creation of vertex arrays object (VAO)
-	glGenVertexArrays(1, &m_VAO);//generation of vao	
-	glBindVertexArray(m_VAO);
+	//glGenVertexArrays(1, &m_VAO);//generation of vao	
+	//glBindVertexArray(m_VAO);
 
 	//Vertex Buffer generation
 	//glGenBuffers(1, &m_vertexCoordsVBO);//removed to VertexBuffer::init
@@ -76,8 +76,12 @@ namespace Renderer {
 	//Init
 	m_vertexCoordsBuffer.init(vertexCoords, 2 * 4 * sizeof(GLfloat));//data == vertexCoords, 2 coordinates * 4 points
 	//Layout to acces data in shader
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
+	//glEnableVertexAttribArray(0);
+	//glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
+	
+	VertexBufferLayout vertexCoordsLayout;
+	vertexCoordsLayout.addElementLayoutFloat(2, false);
+	m_vertexArray.addBuffer(m_vertexCoordsBuffer, vertexCoordsLayout);
 
 	//Texture Buffer generation
 	//glGenBuffers(1, &m_textureCoordsVBO);
@@ -87,25 +91,31 @@ namespace Renderer {
 	//Init
 	m_textureCoordsBuffer.init(textureCoords, 2 * 4 * sizeof(GLfloat));//data == textureCoords, 2 coordinates * 4 points
 	//Layout to acces data in shader
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
+	//glEnableVertexAttribArray(1);
+	//glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
+	
+	VertexBufferLayout textureCoordsLayout;
+	textureCoordsLayout.addElementLayoutFloat(2, false);
+	m_vertexArray.addBuffer(m_textureCoordsBuffer, textureCoordsLayout);//add to buffer
 
 	//EBO Buffer generation
 	//glGenBuffers(1, &m_EBO);//generation of EBO (ELEMENT BUFFER OBJECT)
 	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO);//binding == making current
 	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indexes), &indexes, GL_STATIC_DRAW);//data fill
-	m_indexBuffer.init(indexes, 6 * sizeof(GLuint)); //data == textureCoords, 6 coordinates 
+	m_indexBuffer.init(indexes, 6); //data == textureCoords, 6 coordinates 
 
-	glBindBuffer(GL_ARRAY_BUFFER, 0);//unbind array buffer
-	glBindVertexArray(0);//unbind vertex array
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);//unbind array buffer
+	//glBindBuffer(GL_ARRAY_BUFFER, 0);//unbind array buffer
+	//glBindVertexArray(0);//unbind vertex array
+	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);//unbind array buffer
+	m_vertexArray.unbind();
+	m_indexBuffer.unbind();
 	}
 		
 	Sprite::~Sprite() {
 		//glDeleteBuffers(1, &m_vertexCoordsVBO);//delete vertex coordinates=> removed to ~VertexByffer()
 		//glDeleteBuffers(1, &m_textureCoordsVBO);//delete texture coordinates
 		//glDeleteBuffers(1, &m_EBO);//delete EBO
-		glDeleteVertexArrays(1, &m_VAO);//delete vertex array
+		//glDeleteVertexArrays(1, &m_VAO);//delete vertex array
 	}	
 
 	void Sprite::render() const {
@@ -120,16 +130,20 @@ namespace Renderer {
 		model = glm::translate(model, glm::vec3(- 0.5f * m_size.x, -0.5f * m_size.y, 0.f));//2 move to center
 		model = glm::scale(model, glm::vec3(m_size, 1.f));//1 scale
 
-		glBindVertexArray(m_VAO);	
+		//glBindVertexArray(m_VAO);
+		//m_vertexArray.bind();
 		m_pShaderProgram->setMatrix4("modelMat", model);
 
 		glActiveTexture(GL_TEXTURE0);//texture activation
 		m_pTexture->bind();
 
 		//glDrawArrays(GL_TRIANGLES, 0, 6);
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
-		glBindVertexArray(0);
+		//glBindVertexArray(0);
+		//m_vertexArray.unbind();
+
+		Renderer::draw(m_vertexArray, m_indexBuffer, *m_pShaderProgram);
 	}
 	
 	void Sprite::setPosition(const glm::vec2& position) {

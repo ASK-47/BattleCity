@@ -7,7 +7,7 @@
 #include <glm/vec2.hpp> 
 
 //loading textures to video adapter
-namespace Renderer {
+namespace RenderEngine {
 
 	struct SubTexture2D {
 		glm::vec2 leftBottomUV;
