@@ -60,8 +60,8 @@ public:
     static std::shared_ptr<RenderEngine::Sprite> loadSprite(const std::string& spriteName
         , const std::string& textureName
         , const std::string& shaderName
-        , const unsigned int spriteWidth
-        , const unsigned int spriteHeight
+        //, const unsigned int spriteWidth
+        //, const unsigned int spriteHeight
         , const std::string& subTextureName = "default");
 
     static std::shared_ptr<RenderEngine::Sprite> getSprite(const std::string& spriteName);
@@ -82,8 +82,8 @@ public:
     static std::shared_ptr<RenderEngine::AnimatedSprite> loadAnimatedSprite(const std::string& spriteName
         , const std::string& textureName
         , const std::string& shaderName
-        , const unsigned int spriteWidth
-        , const unsigned int spriteHeight
+        //, const unsigned int spriteWidth
+        //, const unsigned int spriteHeight
         , const std::string& subTextureName = "default");
     
     static std::shared_ptr<RenderEngine::AnimatedSprite> getAnimatedSprite(const std::string& spriteName);
@@ -101,6 +101,8 @@ public:
         const unsigned int subTextureHeight);
 
     static bool loadJSONResources(const std::string& JSONPath);
+
+    static const std::vector<std::vector<std::string>>& getLevels() { return m_levels; }
 
 private:
     //RESOURCES
@@ -123,6 +125,8 @@ private:
     typedef std::map<const std::string, std::shared_ptr<RenderEngine::AnimatedSprite>> AnimatedSpritesMap;
     //AnimatedSpritesMap m_animatedSprites;//map for dynamic (updated) sprites
     static AnimatedSpritesMap m_animatedSprites;
+
+    static std::vector<std::vector<std::string>> m_levels;
 
     //std::string m_path;
     static std::string m_path;

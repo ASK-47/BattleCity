@@ -67,8 +67,12 @@ const char* fragment_shader =
 */
 //==========================================================
 
-glm::ivec2 g_windowSize(640, 480);//init window size 
-Game g_game(g_windowSize);//start
+//glm::ivec2 g_windowSize(640, 480);//init window size 
+//Game g_game(g_windowSize);//start
+
+glm::ivec2 g_windowSize(13 * 16, 14 * 16);
+std::unique_ptr<Game> g_game = std::make_unique<Game>(g_windowSize);
+
 
 //==========================================================
 //DO NOT NEED EAGLE ANYMORE
@@ -80,7 +84,24 @@ void glfwWindowSizeCallback(GLFWwindow* pWindow, int width, int height) {
     g_windowSize.x = width;
     g_windowSize.y = height;
     //glViewport(0, 0, g_windowSize.x, g_windowSize.y);//coordinates and size of window for rendrering
-    RenderEngine::Renderer::setViewport(width, height);
+    //RenderEngine::Renderer::setViewport(width, height);
+
+    const float level_aspect_ratio = 13.f / 14.f;
+    unsigned int viewPortWidth = g_windowSize.x;
+    unsigned int viewPortHeight = g_windowSize.y;
+    unsigned int viewPortLeftOffset = 0;
+    unsigned int viewPortBottomOffset = 0;
+
+    if (static_cast<float>(g_windowSize.x) / g_windowSize.y > level_aspect_ratio) {
+        viewPortWidth = static_cast<unsigned int>(g_windowSize.y * level_aspect_ratio);
+        viewPortLeftOffset = (g_windowSize.x - viewPortWidth) / 2;
+    }
+    else {
+        viewPortHeight = static_cast<unsigned int>(g_windowSize.x / level_aspect_ratio);
+        viewPortBottomOffset = (g_windowSize.y - viewPortHeight) / 2;
+    }
+
+    RenderEngine::Renderer::setViewport(viewPortWidth, viewPortHeight, viewPortLeftOffset, viewPortBottomOffset);
 }
 
 //Callback for pressing the keys
@@ -91,7 +112,8 @@ void glfwKeyCallback(GLFWwindow* pWindow, int key, int scancode, int action, int
     //if (key == GLFW_KEY_ENTER && action == GLFW_PRESS) {//activate isEagle by ENTER
     //    isEagle = !isEagle;
     //}
-    g_game.setKey(key, action);
+    //g_game.setKey(key, action);
+    g_game->setKey(key, action);
 }
 
 int main(int argc, char** argv) {    
@@ -340,7 +362,8 @@ int main(int argc, char** argv) {
     //    pSpriteShaderProgram->setInt("tex", 0);//0 set into slot 0
     //    pSpriteShaderProgram->setMatrix4("projectionMat", projectlMatrix);
             
-        g_game.init();
+        //g_game.init();
+        g_game->init();
         auto lastTime = std::chrono::high_resolution_clock::now();
 
 
@@ -366,7 +389,8 @@ int main(int argc, char** argv) {
             uint64_t duration = std::chrono::duration_cast<std::chrono::nanoseconds>(currentTime - lastTime).count();//while cycle duration
             lastTime = currentTime;//start 
             //pAnimatedSprite->update(duration);//update every cycle
-            g_game.update(duration);
+            //g_game.update(duration);
+            g_game->update(duration);
             
             /* Render here */
             //glClear(GL_COLOR_BUFFER_BIT);//frame rendering (clearing the screen)
@@ -402,12 +426,14 @@ int main(int argc, char** argv) {
             //pAnimatedSprite->render();//render animated sprite            
             //==========================================================            
 
-            g_game.render();
+            //g_game.render();
+            g_game->render();
 
             /* Swap front and back buffers */
             glfwSwapBuffers(pWindow);//changing front and back buffer frames
             
         }
+        g_game = nullptr;
         ResourceManager::unloadAllResources();
     }
     glfwTerminate();//free the resourses, stop the programm  

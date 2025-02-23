@@ -3,21 +3,23 @@
 #include <iostream>
 
 namespace RenderEngine {
-    AnimatedSprite::AnimatedSprite(std::shared_ptr<Texture2D> pTexture
+    AnimatedSprite::AnimatedSprite (std::shared_ptr<Texture2D> pTexture
         , std::string initialSubTexture
-        , std::shared_ptr<ShaderProgram> pShaderProgram
-        , const glm::vec2& position
-        , const glm::vec2& size
-        , const float rotation)
-        : Sprite (std::move(pTexture)
-            , std::move(initialSubTexture)
-            , std::move(pShaderProgram)
-            , position
-            , size
-            , rotation)
-    {
+        //, std::shared_ptr<ShaderProgram> pShaderProgram
+        //, const glm::vec2& position
+        //, const glm::vec2& size
+        //, const float rotation)
+        //: Sprite (std::move(pTexture)
+            //, std::move(initialSubTexture)
+            //, std::move(pShaderProgram)
+            //, position
+            //, size
+            //, rotation)
+        , std::shared_ptr<ShaderProgram> pShaderProgram)
+        : Sprite(std::move(pTexture), std::move(initialSubTexture), std::move(pShaderProgram)) {
         m_pCurrentAnimationDurations = m_statesMap.end();//intialization of invalid state for iterator (see update())
     }
+
     void AnimatedSprite::insertState(std::string state, std::vector<std::pair<std::string, uint64_t>> subTexturesDuration) {
         m_statesMap.emplace(std::move(state), std::move(subTexturesDuration));
     }
@@ -49,7 +51,8 @@ namespace RenderEngine {
             }
         }
     }
-    void AnimatedSprite::render() const {
+    //void AnimatedSprite::render() const {
+    void AnimatedSprite::render(const glm::vec2 & position, const glm::vec2 & size, const float rotation) const {
         if (m_dirty) {//we change buffer of coordinates if only frame is changed
             auto subTexture = m_pTexture->getSubTexture(m_pCurrentAnimationDurations->second[m_currentFrame].first);
             //const GLfloat textureCoords[] = {//get new coordinates of the subtecture U  V
@@ -73,6 +76,7 @@ namespace RenderEngine {
             m_textureCoordsBuffer.update(textureCoords, 2 * 4 * sizeof(GLfloat));
             m_dirty = false;
         }
-        Sprite::render();//invoke render from base class
+        //Sprite::render();//invoke render from base class
+        Sprite::render(position, size, rotation);
     }
 }

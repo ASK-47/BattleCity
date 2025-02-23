@@ -37,13 +37,22 @@ add_executable(${PROJECT_NAME}
 	scr/Renderer/Renderer.cpp
 	
 	scr/Renderer/IndexBuffer.h
-	scr/Renderer/IndexBuffer.cpp
+	scr/Renderer/IndexBuffer.cpp	
 	
-	scr/Game/Game.h
 	scr/Game/Game.cpp
-	
-	scr/Game/Tank.h
-	scr/Game/Tank.cpp
+	scr/Game/Game.h	
+
+	scr/Game/Level.cpp
+	scr/Game/Level.h
+
+	scr/Game/GameObjects/Tank.cpp
+	scr/Game/GameObjects/Tank.h
+
+	scr/Game/GameObjects/iGameObject.cpp
+	scr/Game/GameObjects/iGameObject.h	
+
+	scr/Game/GameObjects/BrickWall.cpp
+	scr/Game/GameObjects/BrickWall.h
 )
 
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)

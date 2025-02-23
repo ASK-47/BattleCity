@@ -10,8 +10,11 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <iostream>
 
-#include "Tank.h"
+#include "GameObjects/Tank.h"
+#include "Level.h"
+
 #include <GLFW/glfw3.h>
+
 
 Game::Game(const glm::ivec2& windowSize) : m_eCurrentGameState(EGameState::Active), m_windowSize(windowSize) {//CTOR to init state and window size
     m_keys.fill(false);//set all keys to 0,0,0...(see set key for action)
@@ -20,14 +23,21 @@ Game::Game(const glm::ivec2& windowSize) : m_eCurrentGameState(EGameState::Activ
 Game::~Game() {}
 
 void Game::render() {
-    ResourceManager::getAnimatedSprite("NewAnimatedSprite")->render();
+    //ResourceManager::getAnimatedSprite("NewAnimatedSprite")->render();
     if (m_pTank) {
         m_pTank->render();
+    }
+    if (m_pLevel) {
+        m_pLevel->render();
     }
 }
 
 void Game::update(const uint64_t delta) {
-    ResourceManager::getAnimatedSprite("NewAnimatedSprite")->update(delta);
+    //ResourceManager::getAnimatedSprite("NewAnimatedSprite")->update(delta);
+    if (m_pLevel) {
+        m_pLevel->update(delta);
+    }
+    
     if (m_pTank) {
         if (m_keys[GLFW_KEY_W]) {//UP
             m_pTank->setOrientation(Tank::EOrientation::Top);
@@ -122,7 +132,7 @@ bool Game::init() {
     
     auto pAnimatedSprite = ResourceManager::loadAnimatedSprite("NewAnimatedSprite", "DefaultTextureAtlas", "spriteShader", 100, 100, "beton"); */   
     
-    auto pAnimatedSprite = ResourceManager::loadAnimatedSprite("NewAnimatedSprite", "mapTextureAtlas", "spriteShader", 100, 100, "beton");    
+    /*auto pAnimatedSprite = ResourceManager::loadAnimatedSprite("NewAnimatedSprite", "mapTextureAtlas", "spriteShader", 100, 100, "beton");
     pAnimatedSprite->setPosition(glm::vec2(300, 300));
     
     std::vector<std::pair<std::string, uint64_t>> waterState;    
@@ -146,7 +156,7 @@ bool Game::init() {
     //modelMatrix_1 = glm::translate(modelMatrix_1, glm::vec3(100.f, 50.f, 0.f));
     
    // glm::mat4 modelMatrix_2 = glm::mat4(1.f);
-    //modelMatrix_2 = glm::translate(modelMatrix_2, glm::vec3(590.f, 50.f, 0.f));
+    //modelMatrix_2 = glm::translate(modelMatrix_2, glm::vec3(590.f, 50.f, 0.f));*/
     
     glm::mat4 projectionMatrix = glm::ortho(0.f, static_cast<float>(m_windowSize.x), 0.f, static_cast<float>(m_windowSize.y), -100.f, 100.f);
     
@@ -154,8 +164,8 @@ bool Game::init() {
     pSpriteShaderProgram->use();
     
     pSpriteShaderProgram->setInt("tex", 0);
-    pSpriteShaderProgram->setMatrix4("projectionMat", projectionMatrix);
 
+    pSpriteShaderProgram->setMatrix4("projectionMat", projectionMatrix);
 
     /*std::vector<std::string> tanksSubTexturesNames = {
        "tankTop1",
@@ -203,7 +213,9 @@ bool Game::init() {
         return false;
     }
 
-    m_pTank = std::make_unique<Tank>(pTanksAnimatedSprite, 0.0000001f, glm::vec2(100.f, 100.f));
+    //m_pTank = std::make_unique<Tank>(pTanksAnimatedSprite, 0.0000001f, glm::vec2(100.f, 100.f));
 
+    m_pTank = std::make_unique<Tank>(pTanksAnimatedSprite, 0.0000001f, glm::vec2(0), glm::vec2(16.f, 16.f));
+    m_pLevel = std::make_unique<Level>(ResourceManager::getLevels()[0]);
     return true;//INIT SUCCESS
 }

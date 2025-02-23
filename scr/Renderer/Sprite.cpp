@@ -10,15 +10,16 @@
 namespace RenderEngine {
 	Sprite::Sprite(std::shared_ptr<Texture2D> pTexture
 		, std::string initialSubTexture
-		, std::shared_ptr<ShaderProgram> pShaderProgram
-		, const glm::vec2& position
-		, const glm::vec2& size
-		, const float rotation)
+		//, std::shared_ptr<ShaderProgram> pShaderProgram
+		//, const glm::vec2& position
+		//, const glm::vec2& size
+		//, const float rotation)
+		, std::shared_ptr<ShaderProgram> pShaderProgram)
 		: m_pTexture(std::move(pTexture))
-		, m_pShaderProgram(std::move(pShaderProgram))
-		, m_position(position)
-		, m_size(size)
-		, m_rotation(rotation) {
+		, m_pShaderProgram(std::move(pShaderProgram)) {
+		//, m_position(position)
+		//, m_size(size)
+		//, m_rotation(rotation) {
 		const GLfloat vertexCoords[] = {
 		//	2-3	  1
 		//	| /	/ |
@@ -118,17 +119,26 @@ namespace RenderEngine {
 		//glDeleteVertexArrays(1, &m_VAO);//delete vertex array
 	}	
 
-	void Sprite::render() const {
+	//void Sprite::render() const {
+	void Sprite::render(const glm::vec2 & position, const glm::vec2 & size, const float rotation) const {
+
 		m_pShaderProgram->use();
 		
 		glm::mat4 model(1.f);
 
 		//all operations following over local sytem of coordinates  => for right transformation need to put object to world system of coordinated and come back
-		model = glm::translate(model, glm::vec3(m_position, 0.f));//5 move to postion
-		model = glm::translate(model, glm::vec3(0.5f * m_size.x, 0.5f * m_size.y, 0.f));//4 move back
-		model = glm::rotate (model, glm::radians(m_rotation), glm::vec3(0.f, 0.f, 1.f));//3 rotate around z axis
-		model = glm::translate(model, glm::vec3(- 0.5f * m_size.x, -0.5f * m_size.y, 0.f));//2 move to center
-		model = glm::scale(model, glm::vec3(m_size, 1.f));//1 scale
+		//model = glm::translate(model, glm::vec3(m_position, 0.f));//5 move to postion
+		//model = glm::translate(model, glm::vec3(0.5f * m_size.x, 0.5f * m_size.y, 0.f));//4 move back
+		//model = glm::rotate (model, glm::radians(m_rotation), glm::vec3(0.f, 0.f, 1.f));//3 rotate around z axis
+		//model = glm::translate(model, glm::vec3(- 0.5f * m_size.x, -0.5f * m_size.y, 0.f));//2 move to center
+		//model = glm::scale(model, glm::vec3(m_size, 1.f));//1 scale
+
+		model = glm::translate(model, glm::vec3(position, 0.f));
+		model = glm::translate(model, glm::vec3(0.5f * size.x, 0.5f * size.y, 0.f));
+		model = glm::rotate(model, glm::radians(rotation), glm::vec3(0.f, 0.f, 1.f));
+		model = glm::translate(model, glm::vec3(-0.5f * size.x, -0.5f * size.y, 0.f));
+		model = glm::scale(model, glm::vec3(size, 1.f));
+
 
 		//glBindVertexArray(m_VAO);
 		//m_vertexArray.bind();
@@ -146,7 +156,7 @@ namespace RenderEngine {
 		Renderer::draw(m_vertexArray, m_indexBuffer, *m_pShaderProgram);
 	}
 	
-	void Sprite::setPosition(const glm::vec2& position) {
+	/*void Sprite::setPosition(const glm::vec2& position) {
 		m_position = position;
 	}
 	
@@ -156,5 +166,5 @@ namespace RenderEngine {
 
 	void Sprite::setRotation(const float rotation) {
 		m_rotation = rotation;
-	}
+	}*/
 }
