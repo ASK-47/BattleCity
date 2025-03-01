@@ -1,37 +1,33 @@
 #include "Tank.h"
+#include "../../Resources/ResourceManager.h"
 #include "../../Renderer/Sprite.h"
 
-//Tank::Tank (std::shared_ptr<RenderEngine::AnimatedSprite> pSprite, const float velocity, const glm::vec2& position)
-    //: m_eOrientation(EOrientation::Top)
 
-//Tank::Tank (std::shared_ptr<RenderEngine::AnimatedSprite> pSprite, const float velocity, const glm::vec2& position, const glm::vec2& size)
-//    : IGameObject(position, size, 0.f)
-//    , m_eOrientation(EOrientation::Top)
-//    , m_pSprite(std::move(pSprite))
-//    , m_move(false)
-//    , m_velocity(velocity)
-//    //, m_position(position)
-//    , m_moveOffset(glm::vec2(0.f, 1.f)) {//up-direction 
-//    //m_pSprite->setPosition(m_position);//set init pisition
-//}
-
-Tank::Tank(std::shared_ptr<RenderEngine::Sprite> pSprite_top
-    , std::shared_ptr<RenderEngine::Sprite> pSprite_bottom
-    , std::shared_ptr<RenderEngine::Sprite> pSprite_left
-    , std::shared_ptr<RenderEngine::Sprite> pSprite_right    
-    , const float velocity
+//Tank::Tank(std::shared_ptr<RenderEngine::Sprite> pSprite_top
+//    , std::shared_ptr<RenderEngine::Sprite> pSprite_bottom
+//    , std::shared_ptr<RenderEngine::Sprite> pSprite_left
+//    , std::shared_ptr<RenderEngine::Sprite> pSprite_right    
+//    , const float velocity
+    
+Tank::Tank(const float velocity      
     , const glm::vec2& position
-
     , const glm::vec2& size) : IGameObject(position, size, 0.f)
-    , m_eOrientation(EOrientation::Top)    
-    , m_pSprite_top(std::move(pSprite_top))
-    , m_pSprite_bottom(std::move(pSprite_bottom))
-    , m_pSprite_left(std::move(pSprite_left))
-    , m_pSprite_right(std::move(pSprite_right))
+    , m_eOrientation(EOrientation::Top)
+    //, m_pSprite_top(std::move(pSprite_top))
+    //, m_pSprite_bottom(std::move(pSprite_bottom))
+    //, m_pSprite_left(std::move(pSprite_left))
+    //, m_pSprite_right(std::move(pSprite_right))
+        
+    , m_pSprite_top(ResourceManager::getSprite("tankSprite_top"))
+    , m_pSprite_bottom(ResourceManager::getSprite("tankSprite_bottom"))
+    , m_pSprite_left(ResourceManager::getSprite("tankSprite_left"))
+    , m_pSprite_right(ResourceManager::getSprite("tankSprite_right"))
+
     , m_spriteAnimator_top(m_pSprite_top)
     , m_spriteAnimator_bottom(m_pSprite_bottom)
     , m_spriteAnimator_left(m_pSprite_left)
     , m_spriteAnimator_right(m_pSprite_right)
+
     , m_move(false)
     , m_velocity(velocity)
     , m_moveOffset(glm::vec2(0.f, 1.f)) {}
