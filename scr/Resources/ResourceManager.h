@@ -9,7 +9,7 @@ namespace RenderEngine {
     class ShaderProgram;
     class Texture2D;
     class Sprite;
-    class AnimatedSprite;
+    //class AnimatedSprite;
 }
 
 class ResourceManager {
@@ -79,14 +79,14 @@ public:
     
     std::shared_ptr<Renderer::AnimatedSprite> getAnimatedSprite(const std::string& spriteName);*/
 
-    static std::shared_ptr<RenderEngine::AnimatedSprite> loadAnimatedSprite(const std::string& spriteName
-        , const std::string& textureName
-        , const std::string& shaderName
-        //, const unsigned int spriteWidth
-        //, const unsigned int spriteHeight
-        , const std::string& subTextureName = "default");
-    
-    static std::shared_ptr<RenderEngine::AnimatedSprite> getAnimatedSprite(const std::string& spriteName);
+    //static std::shared_ptr<RenderEngine::AnimatedSprite> loadAnimatedSprite(const std::string& spriteName
+    //    , const std::string& textureName
+    //    , const std::string& shaderName
+    //    //, const unsigned int spriteWidth
+    //    //, const unsigned int spriteHeight
+    //    , const std::string& subTextureName = "default");
+    //
+    //static std::shared_ptr<RenderEngine::AnimatedSprite> getAnimatedSprite(const std::string& spriteName);
 
     /*std::shared_ptr<Renderer::Texture2D> loadTextureAtlas(std::string textureName,
         std::string texturePath,
@@ -122,9 +122,9 @@ private:
     //SpritesMap m_sprites;//map for staic sprites
     static SpritesMap m_sprites;
     
-    typedef std::map<const std::string, std::shared_ptr<RenderEngine::AnimatedSprite>> AnimatedSpritesMap;
+    //typedef std::map<const std::string, std::shared_ptr<RenderEngine::AnimatedSprite>> AnimatedSpritesMap;
     //AnimatedSpritesMap m_animatedSprites;//map for dynamic (updated) sprites
-    static AnimatedSpritesMap m_animatedSprites;
+    //static AnimatedSpritesMap m_animatedSprites;
 
     static std::vector<std::vector<std::string>> m_levels;
 

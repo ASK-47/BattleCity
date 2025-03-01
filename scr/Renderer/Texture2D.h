@@ -32,7 +32,7 @@ namespace RenderEngine {
 		~Texture2D();
 		
 		void addSubTexture(std::string name, glm::vec2 leftBottomUV, glm::vec2 rightTopUV);
-		const SubTexture2D& getSubTexture(std::string& name) const;
+		const SubTexture2D& getSubTexture(const std::string& name) const;
 		
 		unsigned int width() const {
 			return m_width;

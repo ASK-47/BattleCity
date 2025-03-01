@@ -36,8 +36,8 @@ std::shared_ptr<IGameObject> createGameObjectFromDescription(const char descript
         return std::make_shared<BrickWall>(ResourceManager::getSprite("trees"), position, size, rotation);    
     case 'C':
         return std::make_shared<BrickWall>(ResourceManager::getSprite("ice"), position, size, rotation);   
-    case 'E':
-       return std::make_shared<BrickWall>(ResourceManager::getSprite("eagle"), position, size, rotation);
+    //case 'E':
+       //return std::make_shared<BrickWall>(ResourceManager::getSprite("eagle"), position, size, rotation);
     case 'F':
         return std::make_shared<BrickWall>(ResourceManager::getSprite("nothing"), position, size, rotation);
     case 'G':

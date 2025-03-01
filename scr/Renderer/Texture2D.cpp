@@ -67,7 +67,7 @@ namespace RenderEngine {
 		m_subTextures.emplace(std::move(name), SubTexture2D(leftBottomUV, rightTopUV));
 	}
 
-	const SubTexture2D& Texture2D::getSubTexture(std::string& name) const {
+	const SubTexture2D& Texture2D::getSubTexture(const std::string& name) const {
 		auto it = m_subTextures.find(name);
 		if (it != m_subTextures.end()) {
 			return it->second;			

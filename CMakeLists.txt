@@ -19,10 +19,7 @@ add_executable(${PROJECT_NAME}
 	scr/Renderer/Texture2D.cpp
 
 	scr/Renderer/Sprite.h
-	scr/Renderer/Sprite.cpp
-
-	scr/Renderer/AnimatedSprite.h
-	scr/Renderer/AnimatedSprite.cpp
+	scr/Renderer/Sprite.cpp	
 
 	scr/Renderer/VertexBuffer.h
 	scr/Renderer/VertexBuffer.cpp
@@ -35,6 +32,9 @@ add_executable(${PROJECT_NAME}
 
 	scr/Renderer/Renderer.h
 	scr/Renderer/Renderer.cpp
+
+	scr/Renderer/SpriteAnimator.h
+	scr/Renderer/SpriteAnimator.cpp
 	
 	scr/Renderer/IndexBuffer.h
 	scr/Renderer/IndexBuffer.cpp	
