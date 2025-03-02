@@ -11,6 +11,7 @@
 
 #include "GameObjects/Tank.h"
 #include "Level.h"
+#include "../Physics/PhysicsEngine.h"
 
 #include <GLFW/glfw3.h>
 
@@ -33,27 +34,31 @@ void Game::render() {
 void Game::update(const double delta) {
     if (m_pLevel) {
         m_pLevel->update(delta);
-    }
-    
+    }    
     if (m_pTank) {
         if (m_keys[GLFW_KEY_W]) {//UP
             m_pTank->setOrientation(Tank::EOrientation::Top);
-            m_pTank->move(true);
+            //m_pTank->move(true);
+            m_pTank->setVelocity(m_pTank->getMaxVelocity());
         }
         else if (m_keys[GLFW_KEY_A]) {//LEFT
             m_pTank->setOrientation(Tank::EOrientation::Left);
-            m_pTank->move(true);
+            //m_pTank->move(true);
+            m_pTank->setVelocity(m_pTank->getMaxVelocity());
         }
         else if (m_keys[GLFW_KEY_D]) {//DOWN
             m_pTank->setOrientation(Tank::EOrientation::Right);
-            m_pTank->move(true);
+            //m_pTank->move(true);
+            m_pTank->setVelocity(m_pTank->getMaxVelocity());
         }
         else if (m_keys[GLFW_KEY_S]) {//RIGH
             m_pTank->setOrientation(Tank::EOrientation::Bottom);
-            m_pTank->move(true);
+            //m_pTank->move(true);
+            m_pTank->setVelocity(m_pTank->getMaxVelocity());
         }
         else {
-            m_pTank->move(false);
+            //m_pTank->move(false);
+            m_pTank->setVelocity(0);
         }
         m_pTank->update(delta);
     }
@@ -69,8 +74,8 @@ bool Game::init() {
         std::cerr << "Can't create shader program: " << "DefaultShader" << std::endl;
         return false;//-1 was changed for false
     }
-    m_pLevel = std::make_unique<Level>(ResourceManager::getLevels()[0]);
-    //m_pLevel = std::make_unique<Level>(ResourceManager::getLevels()[1]);
+    m_pLevel = std::make_shared<Level>(ResourceManager::getLevels()[0]);
+    //m_pLevel = std::make_shared<Level>(ResourceManager::getLevels()[1]);
     m_windowSize.x = static_cast<int>(m_pLevel->getLevelWidth());
     m_windowSize.y = static_cast<int>(m_pLevel->getLevelHeight());
     
@@ -83,7 +88,9 @@ bool Game::init() {
     pSpriteShaderProgram->setMatrix4("projectionMat", projectionMatrix);
 
     //m_pTank = std::make_unique<Tank>(0.0000001f, glm::vec2(0), glm::vec2(16.f, 16.f), 0.f);
-    m_pTank = std::make_unique<Tank>(0.05, m_pLevel->get_playerRespawn_1(), glm::vec2(Level::BLOCK_SIZE, Level::BLOCK_SIZE), 0.f);
+    m_pTank = std::make_shared<Tank>(0.05, m_pLevel->get_playerRespawn_1(), glm::vec2(Level::BLOCK_SIZE, Level::BLOCK_SIZE), 0.f);
+    
+    PhysicsEngine::addDynamicGameObject(m_pTank);
 
     return true;//INIT SUCCESS
 }

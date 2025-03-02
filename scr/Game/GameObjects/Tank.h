@@ -7,7 +7,6 @@
 #include "../../Renderer/SpriteAnimator.h"
 #include "../../System/Timer.h"
 
-
 namespace RenderEngine {    
     class Sprite;
 }
@@ -21,15 +20,18 @@ public:
         Right
     };
 
-    Tank(const double velocity
+    Tank(const double maxVelocity
         , const glm::vec2& position
         , const glm::vec2& size
         , const float layer);
         
         void render() const override;
         void setOrientation(const EOrientation eOrientation);
-        void move(const bool move);//if true => animation is on        
+        //void move(const bool move);//if true => animation is on        
         void update(const double delta) override;
+
+        double getMaxVelocity() const;
+        void setVelocity(const double velocity) override;
 
 private://varibles
     EOrientation m_eOrientation;//variable for tank orientation    
@@ -51,10 +53,11 @@ private://varibles
     Timer m_respawnTimer;
     Timer m_shieldTimer;
 
-    bool m_move;
-    double m_velocity;    
-    glm::vec2 m_moveOffset;//varible for direction of move
+    //bool m_move;
+    //double m_velocity;    
+    //glm::vec2 m_moveOffset;//varible for direction of move
 
+    double m_maxVelocity;
     bool m_isSpawning;
     bool m_hasShield;
 };

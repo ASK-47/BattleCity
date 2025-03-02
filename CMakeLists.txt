@@ -46,8 +46,11 @@ add_executable(${PROJECT_NAME}
 	scr/Game/Level.h
 
 	scr/System/Timer.cpp
-	scr/System/Timer.h	
+	scr/System/Timer.h
 
+	scr/Physics/PhysicsEngine.cpp
+	scr/Physics/PhysicsEngine.h
+	
 	scr/Game/GameObjects/Tank.cpp
 	scr/Game/GameObjects/Tank.h
 

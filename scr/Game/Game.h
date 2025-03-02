@@ -27,6 +27,9 @@ private:
     glm::ivec2 m_windowSize;//window size
     EGameState m_eCurrentGameState;
 
-    std::unique_ptr <Tank> m_pTank;        
-    std::unique_ptr<Level> m_pLevel;
+    //std::unique_ptr <Tank> m_pTank;        
+    //std::unique_ptr<Level> m_pLevel;
+
+    std::shared_ptr<Tank> m_pTank;
+    std::shared_ptr<Level> m_pLevel;
 };

@@ -11,6 +11,8 @@
 #include "Resources/ResourceManager.h"
 #include "Renderer/Renderer.h"
 
+#include "Physics/PhysicsEngine.h"
+
 glm::ivec2 g_windowSize(13 * 16, 14 * 16);
 std::unique_ptr<Game> g_game = std::make_unique<Game>(g_windowSize);
 
@@ -76,7 +78,10 @@ int main(int argc, char** argv) {
     {
         ResourceManager::setExecutablePath(argv[0]);//file path for exe          
         
+        PhysicsEngine::init();
+        
         g_game->init();
+
         glfwSetWindowSize(pWindow, static_cast<int>(3*g_game->getCurrentLevelWidth()), static_cast<int>(3*g_game->getCurrentLevelHeight()));
         auto lastTime = std::chrono::high_resolution_clock::now();
 
@@ -88,6 +93,7 @@ int main(int argc, char** argv) {
             lastTime = currentTime;//start             
             
             g_game->update(duration);
+            PhysicsEngine::update(duration);
             
             RenderEngine::Renderer::clear();
 
@@ -95,6 +101,8 @@ int main(int argc, char** argv) {
             
             glfwSwapBuffers(pWindow);//changing front and back buffer frames            
         }
+
+        PhysicsEngine::terminate();
         g_game = nullptr;
         ResourceManager::unloadAllResources();
     }
