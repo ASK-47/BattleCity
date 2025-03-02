@@ -5,6 +5,8 @@
 
 #include "IGameObject.h"
 #include "../../Renderer/SpriteAnimator.h"
+#include "../../System/Timer.h"
+
 
 namespace RenderEngine {    
     class Sprite;
@@ -18,19 +20,16 @@ public:
         Left,
         Right
     };
-    /*Tank(std::shared_ptr<RenderEngine::Sprite> pSprite_top,
-        std::shared_ptr<RenderEngine::Sprite> pSprite_bottom,
-        std::shared_ptr<RenderEngine::Sprite> pSprite_left,
-        std::shared_ptr<RenderEngine::Sprite> pSprite_right,
-        const float velocity,*/
 
-     Tank(const float velocity,
-        const glm::vec2& position,
-        const glm::vec2& size);    
+    Tank(const double velocity
+        , const glm::vec2& position
+        , const glm::vec2& size
+        , const float layer);
+        
         void render() const override;
         void setOrientation(const EOrientation eOrientation);
         void move(const bool move);//if true => animation is on        
-        void update(const uint64_t delta) override;
+        void update(const double delta) override;
 
 private://varibles
     EOrientation m_eOrientation;//variable for tank orientation    
@@ -42,7 +41,20 @@ private://varibles
     RenderEngine::SpriteAnimator m_spriteAnimator_bottom;
     RenderEngine::SpriteAnimator m_spriteAnimator_left;
     RenderEngine::SpriteAnimator m_spriteAnimator_right;
+
+    std::shared_ptr<RenderEngine::Sprite> m_pSprite_respawn;
+    RenderEngine::SpriteAnimator m_spriteAnimator_respawn;
+
+    std::shared_ptr<RenderEngine::Sprite> m_pSprite_shield;
+    RenderEngine::SpriteAnimator m_spriteAnimator_shield;
+
+    Timer m_respawnTimer;
+    Timer m_shieldTimer;
+
     bool m_move;
-    float m_velocity;    
+    double m_velocity;    
     glm::vec2 m_moveOffset;//varible for direction of move
+
+    bool m_isSpawning;
+    bool m_hasShield;
 };

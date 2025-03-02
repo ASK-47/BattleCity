@@ -14,9 +14,12 @@ public:
     ~Game();
     
     void render();
-    void update(const uint64_t delta);
+    void update(const double delta);
     void setKey(const int key, const int action);//pressing key treatment
     bool init();//true if all resourses are loaded
+
+    size_t getCurrentLevelWidth() const;
+    size_t getCurrentLevelHeight() const;
 
 private:
     std::array<bool, 349> m_keys;//to catch 349 keys from GLFW_KEY...

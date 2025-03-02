@@ -49,9 +49,9 @@ public:
         BottomRight
     };
 
-    BrickWall(const EBrickWallType eBrickWallType, const glm::vec2& position, const glm::vec2& size, const float rotation);
+    BrickWall(const EBrickWallType eBrickWallType, const glm::vec2& position, const glm::vec2& size, const float rotation, const float layer);
     virtual void render() const override;
-    virtual void update(const uint64_t delta) override;
+    virtual void update (const double delta) override;
 
 private:    
     void renderBrick(const EBrickLocation eBrickLocation) const;

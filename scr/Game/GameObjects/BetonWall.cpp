@@ -3,8 +3,8 @@
 #include "../../Resources/ResourceManager.h"
 #include "../../Renderer/Sprite.h"
 
-BetonWall::BetonWall(const EBetonWallType eBetonWallType, const glm::vec2& position, const glm::vec2& size, const float rotation)
-    : IGameObject(position, size, rotation)
+BetonWall::BetonWall(const EBetonWallType eBetonWallType, const glm::vec2& position, const glm::vec2& size, const float rotation, const float layer)
+    : IGameObject(position, size, rotation, layer)
     , m_eCurrentBlockState{ EBlockState::Destroyed,EBlockState::Destroyed,EBlockState::Destroyed,EBlockState::Destroyed }
     , m_sprite(ResourceManager::getSprite("betonWall"))
     , m_blockOffsets{ glm::vec2(0, m_size.y / 2.f)
@@ -50,7 +50,7 @@ BetonWall::BetonWall(const EBetonWallType eBetonWallType, const glm::vec2& posit
 void BetonWall::renderBlock(const EBlockLocation eBlockLocation) const {
     const EBlockState state = m_eCurrentBlockState[static_cast<size_t>(eBlockLocation)];
     if (state != EBlockState::Destroyed) {
-        m_sprite->render(m_position + m_blockOffsets[static_cast<size_t>(eBlockLocation)], m_size / 2.f, m_rotation);
+        m_sprite->render(m_position + m_blockOffsets[static_cast<size_t>(eBlockLocation)], m_size / 2.f, m_rotation, m_layer);
     }
 }
 
@@ -61,4 +61,4 @@ void BetonWall::render() const {
     renderBlock(EBlockLocation::BottomRight);
 }
 
-void BetonWall::update(const uint64_t delta) {}
+void BetonWall::update(const double delta) {}

@@ -7,74 +7,56 @@
 #include "GameObjects/Ice.h"
 #include "GameObjects/Water.h"
 #include "GameObjects/Eagle.h"
+#include "GameObjects/Border.h"
 
 #include <iostream>
 
-const unsigned int BLOCK_SIZE = 16;
+//const unsigned int BLOCK_SIZE = 16;
 
 std::shared_ptr<IGameObject> createGameObjectFromDescription(const char description, const glm::vec2& position, const glm::vec2& size, const float rotation)
 {
     switch (description) {
-    case '0':
-        //return std::make_shared<BrickWall>(ResourceManager::getSprite("brickWall_right"), position, size, rotation);
-        return std::make_shared<BrickWall>(BrickWall::EBrickWallType::Right, position, size, rotation);
-    case '1':
-        //return std::make_shared<BrickWall>(ResourceManager::getSprite("brickWall_bottom"), position, size, rotation);
-        return std::make_shared<BrickWall>(BrickWall::EBrickWallType::Bottom, position, size, rotation);
-    case '2':
-        //return std::make_shared<BrickWall>(ResourceManager::getSprite("brickWall_left"), position, size, rotation);
-        return std::make_shared<BrickWall>(BrickWall::EBrickWallType::Left, position, size, rotation);
-    case '3':
-        //return std::make_shared<BrickWall>(ResourceManager::getSprite("brickWall_top"), position, size, rotation);
-        return std::make_shared<BrickWall>(BrickWall::EBrickWallType::Top, position, size, rotation);
-    case '4':
-        //return std::make_shared<BrickWall>(ResourceManager::getSprite("brickWall"), position, size, rotation);
-        return std::make_shared<BrickWall>(BrickWall::EBrickWallType::All, position, size, rotation);
-    case '5':
-        //return std::make_shared<BrickWall>(ResourceManager::getSprite("betonWall_right"), position, size, rotation);
-        return std::make_shared<BetonWall>(BetonWall::EBetonWallType::Right, position, size, rotation);
-    case '6':
-        //return std::make_shared<BrickWall>(ResourceManager::getSprite("betonWall_bottom"), position, size, rotation);
-        return std::make_shared<BetonWall>(BetonWall::EBetonWallType::Bottom, position, size, rotation);
-    case '7':
-        //return std::make_shared<BrickWall>(ResourceManager::getSprite("betonWall_left"), position, size, rotation);
-        return std::make_shared<BetonWall>(BetonWall::EBetonWallType::Left, position, size, rotation);
-    case '8':
-        //return std::make_shared<BrickWall>(ResourceManager::getSprite("betonWall_top"), position, size, rotation);
-        return std::make_shared<BetonWall>(BetonWall::EBetonWallType::Top, position, size, rotation);    
-    case '9':
-        //return std::make_shared<BrickWall>(ResourceManager::getSprite("betonWall"), position, size, rotation);
-        return std::make_shared<BetonWall>(BetonWall::EBetonWallType::All, position, size, rotation);    
-    case 'A':
-        //return std::make_shared<BrickWall>(ResourceManager::getSprite("water1"), position, size, rotation);
-        return std::make_shared<Water>(position, size, rotation);
-    case 'B':
-        //return std::make_shared<BrickWall>(ResourceManager::getSprite("trees"), position, size, rotation);
-        return std::make_shared<Trees>(position, size, rotation);
-    case 'C':
-        //return std::make_shared<BrickWall>(ResourceManager::getSprite("ice"), position, size, rotation);
-        return std::make_shared<Ice>(position, size, rotation);
-    case 'E':
-        //return std::make_shared<BrickWall>(ResourceManager::getSprite("eagle"), position, size, rotation);
-        return std::make_shared<Eagle>(position, size, rotation);
-    
-    /*case 'F':
-        return std::make_shared<BrickWall>(ResourceManager::getSprite("nothing"), position, size, rotation);*/
-    
+    case '0':        
+        return std::make_shared<BrickWall>(BrickWall::EBrickWallType::Right, position, size, rotation, 0.f);
+    case '1':        
+        return std::make_shared<BrickWall>(BrickWall::EBrickWallType::Bottom, position, size, rotation, 0.f);
+    case '2':        
+        return std::make_shared<BrickWall>(BrickWall::EBrickWallType::Left, position, size, rotation, 0.f);
+    case '3':        
+        return std::make_shared<BrickWall>(BrickWall::EBrickWallType::Top, position, size, rotation, 0.f);
+    case '4':        
+        return std::make_shared<BrickWall>(BrickWall::EBrickWallType::All, position, size, rotation, 0.f);
     case 'G':
-        //return std::make_shared<BrickWall>(ResourceManager::getSprite("brickWall_bottom_left"), position, size, rotation);
-        return std::make_shared<BrickWall>(BrickWall::EBrickWallType::BottomLeft, position, size, rotation);
+        return std::make_shared<BrickWall>(BrickWall::EBrickWallType::BottomLeft, position, size, rotation, 0.f);
     case 'H':
-        //return std::make_shared<BrickWall>(ResourceManager::getSprite("brickWall_bottom_right"), position, size, rotation);
-        return std::make_shared<BrickWall>(BrickWall::EBrickWallType::BottomRight, position, size, rotation);
+        return std::make_shared<BrickWall>(BrickWall::EBrickWallType::BottomRight, position, size, rotation, 0.f);
     case 'I':
-        //return std::make_shared<BrickWall>(ResourceManager::getSprite("brickWall_top_left"), position, size, rotation);
-        return std::make_shared<BrickWall>(BrickWall::EBrickWallType::TopLeft, position, size, rotation);
+        return std::make_shared<BrickWall>(BrickWall::EBrickWallType::TopLeft, position, size, rotation, 0.f);
     case 'J':
-        //return std::make_shared<BrickWall>(ResourceManager::getSprite("brickWall_top_right"), position, size, rotation);
-        return std::make_shared<BrickWall>(BrickWall::EBrickWallType::TopRight, position, size, rotation);
+        return std::make_shared<BrickWall>(BrickWall::EBrickWallType::TopRight, position, size, rotation, 0.f);
+
+    case '5':        
+        return std::make_shared<BetonWall>(BetonWall::EBetonWallType::Right, position, size, rotation, 0.f);
+    case '6':        
+        return std::make_shared<BetonWall>(BetonWall::EBetonWallType::Bottom, position, size, rotation, 0.f);
+    case '7':        
+        return std::make_shared<BetonWall>(BetonWall::EBetonWallType::Left, position, size, rotation, 0.f);
+    case '8':        
+        return std::make_shared<BetonWall>(BetonWall::EBetonWallType::Top, position, size, rotation, 0.f);
+    case '9':        
+        return std::make_shared<BetonWall>(BetonWall::EBetonWallType::All, position, size, rotation, 0.f);
+    
+    case 'A':        
+        return std::make_shared<Water>(position, size, rotation, 0.f);
+    case 'B':        
+        return std::make_shared<Trees>(position, size, rotation, 1.f);
+    case 'C':        
+        return std::make_shared<Ice>(position, size, rotation, -1.f);
+    case 'E':        
+        return std::make_shared<Eagle>(position, size, rotation, 0.f);    
     case 'D':
         return nullptr;
+    
     default:
         std::cerr << "Unknown GameObject description: " << description << std::endl;
     }
@@ -90,16 +72,57 @@ Level::Level(const std::vector<std::string>& levelDescription) {
     m_width = levelDescription[0].length();
     m_height = levelDescription.size();
 
-    m_levelObjects.reserve(m_width * m_height);
-    unsigned int currentBottomOffset = static_cast<unsigned int>(BLOCK_SIZE * (m_height - 1));
+    m_playerRespawn_1 = { BLOCK_SIZE * (m_width / 2 - 1), BLOCK_SIZE / 2 };
+    m_playerRespawn_2 = { BLOCK_SIZE * (m_width / 2 + 3), BLOCK_SIZE / 2 };
+    
+    m_enemyRespawn_1 = { BLOCK_SIZE,                      BLOCK_SIZE * m_height - BLOCK_SIZE / 2 };
+    m_enemyRespawn_2 = { BLOCK_SIZE * (m_width / 2 + 1),  BLOCK_SIZE * m_height - BLOCK_SIZE / 2 };
+    m_enemyRespawn_3 = { BLOCK_SIZE * m_width ,           BLOCK_SIZE * m_height - BLOCK_SIZE / 2 };
+
+    //m_levelObjects.reserve(m_width * m_height);
+    //unsigned int currentBottomOffset = static_cast<unsigned int>(BLOCK_SIZE * (m_height - 1));
+
+    m_levelObjects.reserve(m_width * m_height + 4);
+    unsigned int currentBottomOffset = static_cast<unsigned int>(BLOCK_SIZE * (m_height - 1) + BLOCK_SIZE / 2.f);
+
     for (const std::string& currentRow : levelDescription) {
-        unsigned int currentLeftOffset = 0;
+        //unsigned int currentLeftOffset = 0;
+        unsigned int currentLeftOffset = BLOCK_SIZE;
         for (const char currentElement : currentRow) {
-            m_levelObjects.emplace_back(createGameObjectFromDescription(currentElement, glm::vec2(currentLeftOffset, currentBottomOffset), glm::vec2(BLOCK_SIZE, BLOCK_SIZE), 0.f));
+            
+            switch (currentElement) {
+            case 'K':
+                m_playerRespawn_1 = { currentLeftOffset, currentBottomOffset };
+                break;
+            case 'L':
+                m_playerRespawn_2 = { currentLeftOffset, currentBottomOffset };
+                break;
+            case 'M':
+                m_enemyRespawn_1 = { currentLeftOffset, currentBottomOffset };
+                break;
+            case 'N':
+                m_enemyRespawn_2 = { currentLeftOffset, currentBottomOffset };
+                break;
+            case 'O':
+                m_enemyRespawn_3 = { currentLeftOffset, currentBottomOffset };
+                break;
+            default:
+                m_levelObjects.emplace_back(createGameObjectFromDescription(currentElement, glm::vec2(currentLeftOffset, currentBottomOffset), glm::vec2(BLOCK_SIZE, BLOCK_SIZE), 0.f));
+                break;
+            } 
+            //m_levelObjects.emplace_back(createGameObjectFromDescription(currentElement, glm::vec2(currentLeftOffset, currentBottomOffset), glm::vec2(BLOCK_SIZE, BLOCK_SIZE), 0.f));
             currentLeftOffset += BLOCK_SIZE;
         }
         currentBottomOffset -= BLOCK_SIZE;
     }
+    // bottom border
+    m_levelObjects.emplace_back(std::make_shared<Border>(glm::vec2(BLOCK_SIZE, 0.f), glm::vec2(m_width * BLOCK_SIZE, BLOCK_SIZE / 2.f), 0.f, 0.f));
+    // top border
+    m_levelObjects.emplace_back(std::make_shared<Border>(glm::vec2(BLOCK_SIZE, m_height * BLOCK_SIZE + BLOCK_SIZE / 2.f), glm::vec2(m_width * BLOCK_SIZE, BLOCK_SIZE / 2.f), 0.f, 0.f));
+    // left border
+    m_levelObjects.emplace_back(std::make_shared<Border>(glm::vec2(0.f, 0.f), glm::vec2(BLOCK_SIZE, (m_height + 1) * BLOCK_SIZE), 0.f, 0.f));
+    // right border
+    m_levelObjects.emplace_back(std::make_shared<Border>(glm::vec2((m_width + 1) * BLOCK_SIZE, 0.f), glm::vec2(BLOCK_SIZE * 2.f, (m_height + 1) * BLOCK_SIZE), 0.f, 0.f));
 }
 
 void Level::render() const {
@@ -110,10 +133,39 @@ void Level::render() const {
     }
 }
 
-void Level::update(const uint64_t delta) {
+void Level::update(const double delta) {
     for (const auto& currentLevelObject : m_levelObjects) {
         if (currentLevelObject) {
             currentLevelObject->update(delta);
         }
     }
+}
+ 
+size_t Level::getLevelWidth() const {
+    return (m_width + 3) * BLOCK_SIZE;
+}
+
+size_t Level::getLevelHeight() const {
+    return (m_height + 1) * BLOCK_SIZE;
+}
+
+
+const glm::ivec2& Level::get_playerRespawn_1() const {
+    return m_playerRespawn_1;
+}
+
+const glm::ivec2& Level::get_playerRespawn_2() const {
+    return m_playerRespawn_2;
+}
+
+const glm::ivec2& Level::get_enemyRespawn_1() const {
+    return m_enemyRespawn_1;
+}
+
+const glm::ivec2& Level::get_enemyRespawn_2() const {
+    return m_enemyRespawn_2;
+}
+
+const glm::ivec2& Level::get_enemyRespawn_3() const {
+    return m_enemyRespawn_3;
 }

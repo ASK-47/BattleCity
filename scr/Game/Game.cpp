@@ -30,7 +30,7 @@ void Game::render() {
     }
 }
 
-void Game::update(const uint64_t delta) {    
+void Game::update(const double delta) {
     if (m_pLevel) {
         m_pLevel->update(delta);
     }
@@ -69,7 +69,10 @@ bool Game::init() {
         std::cerr << "Can't create shader program: " << "DefaultShader" << std::endl;
         return false;//-1 was changed for false
     }
-
+    m_pLevel = std::make_unique<Level>(ResourceManager::getLevels()[0]);
+    //m_pLevel = std::make_unique<Level>(ResourceManager::getLevels()[1]);
+    m_windowSize.x = static_cast<int>(m_pLevel->getLevelWidth());
+    m_windowSize.y = static_cast<int>(m_pLevel->getLevelHeight());
     
     glm::mat4 projectionMatrix = glm::ortho(0.f, static_cast<float>(m_windowSize.x), 0.f, static_cast<float>(m_windowSize.y), -100.f, 100.f);
         
@@ -79,10 +82,16 @@ bool Game::init() {
 
     pSpriteShaderProgram->setMatrix4("projectionMat", projectionMatrix);
 
-    m_pTank = std::make_unique<Tank>(0.0000001f, glm::vec2(0), glm::vec2(16.f, 16.f));
-    
-    //m_pLevel = std::make_unique<Level>(ResourceManager::getLevels()[0]);
-    m_pLevel = std::make_unique<Level>(ResourceManager::getLevels()[1]);
+    //m_pTank = std::make_unique<Tank>(0.0000001f, glm::vec2(0), glm::vec2(16.f, 16.f), 0.f);
+    m_pTank = std::make_unique<Tank>(0.05, m_pLevel->get_playerRespawn_1(), glm::vec2(Level::BLOCK_SIZE, Level::BLOCK_SIZE), 0.f);
 
     return true;//INIT SUCCESS
+}
+
+size_t Game::getCurrentLevelWidth() const {
+    return m_pLevel->getLevelWidth();
+}
+
+size_t Game::getCurrentLevelHeight() const {
+    return m_pLevel->getLevelHeight();
 }

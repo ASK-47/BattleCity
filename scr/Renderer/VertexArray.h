@@ -21,6 +21,7 @@ namespace RenderEngine {
 
     private:
         GLuint m_id = 0;
-        unsigned int m_elementsCount = 0;
+        unsigned int m_elementsCount = 0;      
+
     };
 }

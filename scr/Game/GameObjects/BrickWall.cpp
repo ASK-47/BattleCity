@@ -4,8 +4,8 @@
 #include "../../Resources/ResourceManager.h"
 
 //BrickWall::BrickWall(const std::shared_ptr<RenderEngine::Sprite> pSprite, const glm::vec2& position, const glm::vec2& size, const float rotation)
-BrickWall::BrickWall(const EBrickWallType eBrickWallType, const glm::vec2& position, const glm::vec2& size, const float rotation)
-    : IGameObject(position, size, rotation)
+BrickWall::BrickWall(const EBrickWallType eBrickWallType, const glm::vec2& position, const glm::vec2& size, const float rotation, const float layer)
+    : IGameObject(position, size, rotation, layer)
     //, m_pCurrentSprite(std::move(pSprite))
     , m_eCurrentBrickState {EBrickState::Destroyed, EBrickState::Destroyed, EBrickState::Destroyed, EBrickState::Destroyed}
     , m_blockOffsets{ glm::vec2(0, m_size.y / 2.f)
@@ -63,28 +63,19 @@ BrickWall::BrickWall(const EBrickWallType eBrickWallType, const glm::vec2& posit
     }
 }
 
-void BrickWall::renderBrick(const EBrickLocation eBrickLocation) const {
-    //static const std::array<glm::vec2, 4> offsets = {
-    //    glm::vec2(0, m_size.y / 2.f)
-    //    , glm::vec2(m_size.x / 2.f, m_size.y / 2.f)
-    //    , glm::vec2(0, 0)
-    //    , glm::vec2(m_size.x / 2.f, 0)
-    //};
-
+void BrickWall::renderBrick(const EBrickLocation eBrickLocation) const {    
     const EBrickState state = m_eCurrentBrickState[static_cast<size_t>(eBrickLocation)];
-    if (state != EBrickState::Destroyed) {
-        //m_sprites[static_cast<size_t>(state)]->render(m_position + offsets[static_cast<size_t>(eBrickLocation)], m_size / 2.f, m_rotation);
-        m_sprites[static_cast<size_t>(state)]->render(m_position + m_blockOffsets[static_cast<size_t>(eBrickLocation)], m_size / 2.f, m_rotation);
+    if (state != EBrickState::Destroyed) {    
+        m_sprites[static_cast<size_t>(state)]->render(m_position + m_blockOffsets[static_cast<size_t>(eBrickLocation)], m_size / 2.f, m_rotation, m_layer);
     }
 }
 
 
-void BrickWall::render() const {
-    //m_pCurrentSprite->render(m_position, m_size, m_rotation);
+void BrickWall::render() const {    
     renderBrick(EBrickLocation::TopLeft);
     renderBrick(EBrickLocation::TopRight);
     renderBrick(EBrickLocation::BottomLeft);
     renderBrick(EBrickLocation::BottomRight);
 }
 
-void BrickWall::update(const uint64_t delta) {}
+void BrickWall::update(const double delta) {}

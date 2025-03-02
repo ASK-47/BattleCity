@@ -45,6 +45,9 @@ add_executable(${PROJECT_NAME}
 	scr/Game/Level.cpp
 	scr/Game/Level.h
 
+	scr/System/Timer.cpp
+	scr/System/Timer.h	
+
 	scr/Game/GameObjects/Tank.cpp
 	scr/Game/GameObjects/Tank.h
 
@@ -68,7 +71,9 @@ add_executable(${PROJECT_NAME}
 
 	scr/Game/GameObjects/Water.cpp
 	scr/Game/GameObjects/Water.h
-	
+
+	scr/Game/GameObjects/Border.cpp
+	scr/Game/GameObjects/Border.h
 )
 
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
