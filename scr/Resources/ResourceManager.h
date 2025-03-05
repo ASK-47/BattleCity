@@ -5,6 +5,7 @@
 #include <map>
 #include <vector>
 
+
 namespace RenderEngine {
     class ShaderProgram;
     class Texture2D;
@@ -102,6 +103,8 @@ public:
 
     static bool loadJSONResources(const std::string& JSONPath);
 
+    static const std::vector<std::string>& getStartScreen() { return m_startScreen; }
+
     static const std::vector<std::vector<std::string>>& getLevels() { return m_levels; }
 
 private:
@@ -127,6 +130,8 @@ private:
     //static AnimatedSpritesMap m_animatedSprites;
 
     static std::vector<std::vector<std::string>> m_levels;
+
+    static std::vector<std::string> m_startScreen;
 
     //std::string m_path;
     static std::string m_path;

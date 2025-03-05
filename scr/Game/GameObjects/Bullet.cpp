@@ -24,13 +24,21 @@ Bullet::Bullet(const double velocity
     , m_eOrientation(EOrientation::Top)
     , m_maxVelocity(velocity)
     , m_isActive(false)
-    , m_isExplosion(false) {
-    //setVelocity(velocity);
-    m_colliders.emplace_back(glm::vec2(0), m_size);
+    , m_isExplosion(false) {    
+    //m_colliders.emplace_back(glm::vec2(0), m_size);
+
+    auto onCollisionCallback = [&](const IGameObject& object, const Physics::ECollisionDirection) {
+            setVelocity(0);
+            m_isExplosion = true;
+            m_explosionTimer.start(m_spriteAnimator_explosion.getTotalDuration());
+    };    
+    m_colliders.emplace_back(glm::vec2(0), m_size, onCollisionCallback);
+
 
     m_explosionTimer.setCallback([&]() {
             m_isExplosion = false;
             m_isActive = false;
+            m_spriteAnimator_explosion.reset();
         }
     );
 }
@@ -52,11 +60,10 @@ void Bullet::render() const {
         case EOrientation::Right:
             m_pSprite_explosion->render(m_position - m_explosionOffset + glm::vec2(m_size.x / 2.f, 0), m_explosionSize, m_rotation, m_layer + 0.1f, m_spriteAnimator_explosion.getCurrentFrame());
             break;
-        }
+        }     
     }
-    else {
+    else if (m_isActive) {
         switch (m_eOrientation) {
-            if (m_isActive) {
 
         case EOrientation::Top:
             m_pSprite_top->render(m_position, m_size, m_rotation, m_layer);
@@ -73,10 +80,9 @@ void Bullet::render() const {
         case EOrientation::Right:
             m_pSprite_right->render(m_position, m_size, m_rotation, m_layer);
             break;
-            }
         }
     }
-}
+ }
 
 void Bullet::update(const double delta) {
     if (m_isExplosion) {
@@ -98,10 +104,9 @@ void Bullet::fire(const glm::vec2& position, const glm::vec2& direction) {
     setVelocity(m_maxVelocity);
 }
 
-void Bullet::onCollision() {
-    setVelocity(0);
-    //m_isActive = false;
-    m_isExplosion = true;
-    m_spriteAnimator_explosion.reset();
-    m_explosionTimer.start(m_spriteAnimator_explosion.getTotalDuration());
-}
+//void Bullet::onCollision() {
+//    setVelocity(0);    
+//    m_isExplosion = true;
+//    m_spriteAnimator_explosion.reset();
+//    m_explosionTimer.start(m_spriteAnimator_explosion.getTotalDuration());
+//}

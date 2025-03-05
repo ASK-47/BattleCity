@@ -40,10 +40,15 @@ add_executable(${PROJECT_NAME}
 	scr/Renderer/IndexBuffer.cpp	
 	
 	scr/Game/Game.cpp
-	scr/Game/Game.h	
+	scr/Game/Game.h
 
-	scr/Game/Level.cpp
-	scr/Game/Level.h
+	scr/Game/GameStates/IGameState.h
+
+	scr/Game/GameStates/StartScreen.cpp
+	scr/Game/GameStates/StartScreen.h
+
+	scr/Game/GameStates/Level.cpp
+	scr/Game/GameStates/Level.h	
 
 	scr/System/Timer.cpp
 	scr/System/Timer.h
@@ -90,7 +95,8 @@ target_link_libraries(${PROJECT_NAME} glfw)
 add_subdirectory(external/glad)
 target_link_libraries(${PROJECT_NAME} glad)
 
-include_directories(external/glm)
+add_subdirectory(external/glm)
+target_link_libraries(${PROJECT_NAME} glm)
 
 include_directories(external/rapidjson/include)
 

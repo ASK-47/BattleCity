@@ -4,6 +4,7 @@
 #include <array>
 #include <memory>
 
+class StartScreen;
 class Tank;
 class Level;
 
@@ -18,15 +19,28 @@ public:
     void setKey(const int key, const int action);//pressing key treatment
     bool init();//true if all resourses are loaded
 
-    size_t getCurrentLevelWidth() const;
-    size_t getCurrentLevelHeight() const;
+    //size_t getCurrentLevelWidth() const;
+    //size_t getCurrentLevelHeight() const;
+    unsigned int getCurrentWidth() const;
+    unsigned int getCurrentHeight() const;
 
-private:
+private:    
+    enum class EGameState {//states of the game
+        StartScreen,
+        LevelStart,
+        Level,
+        Pause,
+        Scores,
+        GameOver
+    }; 
+    
     std::array<bool, 349> m_keys;//to catch 349 keys from GLFW_KEY...
-    enum class EGameState {Active, Pause}; //states of the game
+
     glm::ivec2 m_windowSize;//window size
     EGameState m_eCurrentGameState;;
 
     std::shared_ptr<Tank> m_pTank;
     std::shared_ptr<Level> m_pLevel;
+
+    std::shared_ptr<StartScreen> m_pStartScreen;
 };
