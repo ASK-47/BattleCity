@@ -1,14 +1,20 @@
 #include "Tank.h"
 #include "../../Resources/ResourceManager.h"
 #include "../../Renderer/Sprite.h"
-  
+
+#include "Bullet.h"
+#include "../../Physics/PhysicsEngine.h"
+
 Tank::Tank(const double maxVelocity
     , const glm::vec2& position
     , const glm::vec2& size    
     , const float layer)
-    : IGameObject(position, size, 0.f, layer)    
+    : IGameObject(IGameObject::EObjectType::Tank, position, size, 0.f, layer)
     
     , m_eOrientation(EOrientation::Top)
+
+    //, m_pCurrentBullet(std::make_shared<Bullet>(0.1, m_position + m_size / 4.f, m_size / 2.f, layer))
+    , m_pCurrentBullet(std::make_shared<Bullet>(0.1, m_position + m_size / 4.f, m_size / 2.f, m_size, layer))
     
     , m_pSprite_top(ResourceManager::getSprite("tankSprite_top"))
     , m_pSprite_bottom(ResourceManager::getSprite("tankSprite_bottom"))
@@ -24,10 +30,6 @@ Tank::Tank(const double maxVelocity
     , m_spriteAnimator_respawn(m_pSprite_respawn)
     , m_pSprite_shield(ResourceManager::getSprite("shield"))
     , m_spriteAnimator_shield(m_pSprite_shield)
-
-    //, m_move(false)
-    //, m_velocity(velocity)
-    //, m_moveOffset(glm::vec2(0.f, 1.f)) 
     , m_maxVelocity(maxVelocity)
 
     , m_isSpawning(true)
@@ -44,6 +46,10 @@ Tank::Tank(const double maxVelocity
                 m_hasShield = false;
             }
         );
+
+        m_colliders.emplace_back(glm::vec2(0), m_size);
+
+        Physics::PhysicsEngine::addDynamicGameObject(m_pCurrentBullet);
 }
 
 void Tank::setVelocity(const double velocity) {
@@ -58,15 +64,19 @@ void Tank::render() const {
     }
     else {
         switch (m_eOrientation) {
+        
         case Tank::EOrientation::Top:
             m_pSprite_top->render(m_position, m_size, m_rotation, m_layer, m_spriteAnimator_top.getCurrentFrame());
             break;
+        
         case Tank::EOrientation::Bottom:
             m_pSprite_bottom->render(m_position, m_size, m_rotation, m_layer, m_spriteAnimator_bottom.getCurrentFrame());
             break;
+        
         case Tank::EOrientation::Left:
             m_pSprite_left->render(m_position, m_size, m_rotation, m_layer, m_spriteAnimator_left.getCurrentFrame());
             break;
+        
         case Tank::EOrientation::Right:
             m_pSprite_right->render(m_position, m_size, m_rotation, m_layer, m_spriteAnimator_right.getCurrentFrame());
             break;
@@ -74,6 +84,9 @@ void Tank::render() const {
         if (m_hasShield) {
                 m_pSprite_shield->render(m_position, m_size, m_rotation, m_layer + 0.1f, m_spriteAnimator_shield.getCurrentFrame());
         }
+    }
+    if (m_pCurrentBullet->isActive()) {
+        m_pCurrentBullet->render();
     }
 }
 
@@ -85,40 +98,30 @@ void Tank::setOrientation(const EOrientation eOrientation) {
     m_eOrientation = eOrientation;//else => new orientation
     
     switch (m_eOrientation) {    
-    case Tank::EOrientation::Top:
-        //m_moveOffset.x = 0.f;
-        //m_moveOffset.y = 1.f;
+    case Tank::EOrientation::Top:        
         m_direction.x = 0.f;
         m_direction.y = 1.f;
         break;    
-    case Tank::EOrientation::Bottom:        
-        //m_moveOffset.x = 0.f;
-        //m_moveOffset.y = -1.f;
+    case Tank::EOrientation::Bottom:                
         m_direction.x = 0.f;
         m_direction.y = -1.f;
         break;    
     case Tank::EOrientation::Left:        
-        //m_moveOffset.x = -1.f;
-        //m_moveOffset.y = 0.f;
         m_direction.x = -1.f;
         m_direction.y = 0.f;
         break;    
     case Tank::EOrientation::Right:        
-        //m_moveOffset.x = 1.f;
-        //m_moveOffset.y = 0.f;
         m_direction.x = 1.f;
         m_direction.y = 0.f;
-        break;    
-    default:
-        break;
+        break;        
     }
 }
 
-//void Tank::move(const bool move) {
-//    m_move = move;
-//}
 
 void Tank::update(const double delta) {    
+    if (m_pCurrentBullet->isActive()) {
+        m_pCurrentBullet->update(delta);
+    }    
     if (m_isSpawning) {        
         m_spriteAnimator_respawn.update(delta);
         m_respawnTimer.update(delta);
@@ -128,11 +131,8 @@ void Tank::update(const double delta) {
             m_spriteAnimator_shield.update(delta);
             m_shieldTimer.update(delta);
         }
-    }
-    //if (m_move) {
-    if (m_velocity > 0) {
-        //m_position.x += static_cast<float>(delta * m_velocity * m_moveOffset.x);
-        //m_position.y += static_cast<float>(delta * m_velocity * m_moveOffset.y);        
+    }    
+    if (m_velocity > 0) {          
         switch (m_eOrientation) {
         case Tank::EOrientation::Top:
             m_spriteAnimator_top.update(delta);
@@ -149,4 +149,13 @@ void Tank::update(const double delta) {
         }
     }
 }
+
 double  Tank::getMaxVelocity() const { return m_maxVelocity; }
+
+void Tank::fire() {    
+    if (!m_isSpawning && !m_pCurrentBullet->isActive()) {
+        //m_pCurrentBullet->fire(m_position + m_size / 4.f, m_direction);
+        //Physics::PhysicsEngine::addDynamicGameObject(m_pCurrentBullet);
+        m_pCurrentBullet->fire(m_position + m_size / 4.f + m_size * m_direction / 4.f, m_direction);
+    }
+}

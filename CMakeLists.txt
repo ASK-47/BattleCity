@@ -77,6 +77,9 @@ add_executable(${PROJECT_NAME}
 
 	scr/Game/GameObjects/Border.cpp
 	scr/Game/GameObjects/Border.h
+
+	scr/Game/GameObjects/Bullet.cpp
+	scr/Game/GameObjects/Bullet.h
 )
 
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)

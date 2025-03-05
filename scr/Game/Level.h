@@ -27,9 +27,16 @@ public:
     const glm::ivec2& get_enemyRespawn_2() const;
     const glm::ivec2& get_enemyRespawn_3() const;
 
+    std::vector<std::shared_ptr<IGameObject>> getObjectsInArea(const glm::vec2& bottomLeft, const glm::vec2& topRight) const;
+
 private:
-    size_t m_width = 0;
-    size_t m_height = 0;
+    //size_t m_width = 0;
+    //size_t m_height = 0;
+    size_t m_widthBlocks = 0;
+    size_t m_heightBlocks = 0;
+    unsigned int m_widthPixels = 0;
+    unsigned int m_heightPixels = 0;
+
     std::vector<std::shared_ptr<IGameObject>> m_levelObjects;
 
     glm::ivec2 m_playerRespawn_1;

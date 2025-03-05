@@ -25,10 +25,7 @@ private:
     std::array<bool, 349> m_keys;//to catch 349 keys from GLFW_KEY...
     enum class EGameState {Active, Pause}; //states of the game
     glm::ivec2 m_windowSize;//window size
-    EGameState m_eCurrentGameState;
-
-    //std::unique_ptr <Tank> m_pTank;        
-    //std::unique_ptr<Level> m_pLevel;
+    EGameState m_eCurrentGameState;;
 
     std::shared_ptr<Tank> m_pTank;
     std::shared_ptr<Level> m_pLevel;

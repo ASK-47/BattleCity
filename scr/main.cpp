@@ -18,8 +18,7 @@ std::unique_ptr<Game> g_game = std::make_unique<Game>(g_windowSize);
 
 void glfwWindowSizeCallback(GLFWwindow* pWindow, int width, int height) {
     g_windowSize.x = width;
-    g_windowSize.y = height;
-    //const float level_aspect_ratio = 13.f / 14.f;
+    g_windowSize.y = height;    
     const float level_aspect_ratio = static_cast<float>(g_game->getCurrentLevelWidth()) / g_game->getCurrentLevelHeight();
     unsigned int viewPortWidth = g_windowSize.x;
     unsigned int viewPortHeight = g_windowSize.y;
@@ -78,7 +77,8 @@ int main(int argc, char** argv) {
     {
         ResourceManager::setExecutablePath(argv[0]);//file path for exe          
         
-        PhysicsEngine::init();
+        //PhysicsEngine::init();
+        Physics::PhysicsEngine::init();
         
         g_game->init();
 
@@ -93,7 +93,8 @@ int main(int argc, char** argv) {
             lastTime = currentTime;//start             
             
             g_game->update(duration);
-            PhysicsEngine::update(duration);
+            //PhysicsEngine::update(duration);
+            Physics::PhysicsEngine::update(duration);
             
             RenderEngine::Renderer::clear();
 
@@ -102,7 +103,8 @@ int main(int argc, char** argv) {
             glfwSwapBuffers(pWindow);//changing front and back buffer frames            
         }
 
-        PhysicsEngine::terminate();
+        //PhysicsEngine::terminate();
+        Physics::PhysicsEngine::terminate();
         g_game = nullptr;
         ResourceManager::unloadAllResources();
     }

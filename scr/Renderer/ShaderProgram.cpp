@@ -49,7 +49,8 @@ namespace RenderEngine {
 		glGetShaderiv(shaderID, GL_COMPILE_STATUS, &success);//result of compilation staus is writen into sucsess
 		if (!success) {//in case of error
 			GLchar infolog[1024];
-			glGetShaderInfoLog(shaderID, 1024, nullptr, infolog);
+			//glGetShaderInfoLog(shaderID, 1024, nullptr, infolog);
+			glGetProgramInfoLog(shaderID, 1024, nullptr, infolog);
 			std::cerr << "ERROR::SHADER: Compile time error:\n" << infolog << std::endl;
 			return false;//for createShader
 		}
@@ -59,7 +60,6 @@ namespace RenderEngine {
 	ShaderProgram::~ShaderProgram() {//D-tor
 		glDeleteProgram(m_ID);
 	}
-
 
 	void ShaderProgram::use() const {
 		glUseProgram(m_ID);
