@@ -15,12 +15,13 @@ namespace Physics {
 
     void PhysicsEngine::setCurrentLevel(std::shared_ptr<Level> pLevel) {
         m_pCurrentLevel.swap(pLevel);
+        m_dynamicObjects.clear();
+        m_pCurrentLevel->initPhysics();
     }
     
     void PhysicsEngine::update(const double delta) {     
         for (auto& currentDynamicObject : m_dynamicObjects) {
-            if (currentDynamicObject->getCurrentVelocity() > 0) {
-                // align position to multiple of 4 pixels
+            if (currentDynamicObject->getCurrentVelocity() > 0) {                
                 if (currentDynamicObject->getCurrentDirection().x != 0.f) {// right and left
                     currentDynamicObject->getCurrentPosition() = glm::vec2(currentDynamicObject->getCurrentPosition().x, static_cast<unsigned int>(currentDynamicObject->getCurrentPosition().y / 4.f + 0.5f) * 4.f);
                 }
@@ -44,16 +45,10 @@ namespace Physics {
                 else if (currentDynamicObject->getCurrentDirection().y > 0) objectCollisionDirection = ECollisionDirection::Bottom;
                 else if (currentDynamicObject->getCurrentDirection().y < 0) objectCollisionDirection = ECollisionDirection::Top;
 
-                for (const auto& currentDynamicObjectCollider : colliders) {
-                    //const auto& collidersToCheck = currentObjectToCheck->getColliders();
-                    //if (currentObjectToCheck->collides(currentObject->getObjectType()) && !collidersToCheck.empty()) {
-                    for (const auto& currentObjectToCheck : objectsToCheck) {
-                        //if (hasIntersection(colliders, newPosition, collidersToCheck, currentObjectToCheck->getCurrentPosition())) {
+                for (const auto& currentDynamicObjectCollider : colliders) {                    
+                    for (const auto& currentObjectToCheck : objectsToCheck) {                        
                         const auto& collidersToCheck = currentObjectToCheck->getColliders();
-                        if (currentObjectToCheck->collides(currentDynamicObject->getObjectType()) && !collidersToCheck.empty()) {
-                            //hasCollision = true;
-                            //currentObjectToCheck->onCollision();
-                            //break;
+                        if (currentObjectToCheck->collides(currentDynamicObject->getObjectType()) && !collidersToCheck.empty()) {                            
                             for (const auto& currentObjectCollider : currentObjectToCheck->getColliders()) {
                                 if (currentObjectCollider.isActive && hasIntersection(currentDynamicObjectCollider, newPosition, currentObjectCollider, currentObjectToCheck->getCurrentPosition())) {
                                     hasCollision = true;
@@ -78,62 +73,34 @@ namespace Physics {
                     }
                     else if (currentDynamicObject->getCurrentDirection().y != 0.f) {// top and bottom
                         currentDynamicObject->getCurrentPosition() = glm::vec2(currentDynamicObject->getCurrentPosition().x, static_cast<unsigned int>(currentDynamicObject->getCurrentPosition().y / 8.f + 0.5f) * 8.f);
-                    }
-                    //currentDynamicObject->onCollision();
+                    }                    
                 }
             }
         }
-    }
-    
+    }    
     
     void PhysicsEngine::addDynamicGameObject(std::shared_ptr<IGameObject> pGameObject) {
         m_dynamicObjects.insert(std::move(pGameObject));
-    }
-
-    //bool PhysicsEngine::hasIntersection(const std::vector<AABB>& colliders1, const glm::vec2& position1
-    //, const std::vector<AABB>& colliders2
-    //, const glm::vec2& position2) {
+    }    
     
     bool PhysicsEngine::hasIntersection(const Collider& collider1
         , const glm::vec2& position1
         , const Collider& collider2
-        , const glm::vec2& position2) {        
-            //for (const auto& currentCollider1 : colliders1) {
+        , const glm::vec2& position2) {
         const glm::vec2 collider1_bottomLeft_world = collider1.boundingBox.bottomLeft + position1;
-        const glm::vec2 collider1_topRight_world = collider1.boundingBox.topRight + position1;
-                //for (const auto& currentCollider2 : colliders2) {
-                    //const glm::vec2 currentCollider2_bottomLeft_world = currentCollider2.bottomLeft + position2;
-                    //const glm::vec2 currentCollider2_topRight_world = currentCollider2.topRight + position2;                         
-                    
-                    //if (currentCollider1_bottomLeft_world.x >= currentCollider2_topRight_world.x) {
-                    //    //return false;
-                    //    continue;
-                    //}
-                    //if (currentCollider1_topRight_world.x <= currentCollider2_bottomLeft_world.x) {
-                    //    //return false;
-                    //    continue;
-                    //}
-
+        const glm::vec2 collider1_topRight_world = collider1.boundingBox.topRight + position1;                
         const glm::vec2 collider2_bottomLeft_world = collider2.boundingBox.bottomLeft + position2;
         const glm::vec2 collider2_topRight_world = collider2.boundingBox.topRight + position2;
-                    //if (currentCollider1_bottomLeft_world.y >= currentCollider2_topRight_world.y) {
-                    //    //return false;
-                    //    continue;
-                    //}
-                    //if (currentCollider1_topRight_world.y <= currentCollider2_bottomLeft_world.y) {
-                    //    //return false;
-                    //    continue;
-                    //}                 
+                    
         if (collider1_bottomLeft_world.x >= collider2_topRight_world.x) {
             return false;
         }
         if (collider1_topRight_world.x <= collider2_bottomLeft_world.x) {
-            return false;        }
-                    //return true;
+            return false;
+        }        
         if (collider1_bottomLeft_world.y >= collider2_topRight_world.y) {
             return false;
-                    }
-        
+        }        
         if (collider1_topRight_world.y <= collider2_bottomLeft_world.y) {
             return false;
         }

@@ -7,13 +7,15 @@
 #include "../GameObjects/Water.h"
 #include "../GameObjects/Eagle.h"
 #include "../GameObjects/Border.h"
+#include "../GameObjects/Tank.h"
+
+#include <GLFW/glfw3.h>
 
 #include <iostream>
 #include <algorithm>
 #include <cmath>
 
-std::shared_ptr<IGameObject> createGameObjectFromDescription(const char description, const glm::vec2& position, const glm::vec2& size, const float rotation)
-{
+std::shared_ptr<IGameObject> createGameObjectFromDescription(const char description, const glm::vec2& position, const glm::vec2& size, const float rotation) {
     switch (description) {
     case '0':        
         return std::make_shared<BrickWall>(BrickWall::EBrickWallType::Right, position, size, rotation, 0.f);
@@ -33,7 +35,6 @@ std::shared_ptr<IGameObject> createGameObjectFromDescription(const char descript
         return std::make_shared<BrickWall>(BrickWall::EBrickWallType::TopLeft, position, size, rotation, 0.f);
     case 'J':
         return std::make_shared<BrickWall>(BrickWall::EBrickWallType::TopRight, position, size, rotation, 0.f);
-
     case '5':        
         return std::make_shared<BetonWall>(BetonWall::EBetonWallType::Right, position, size, rotation, 0.f);
     case '6':        
@@ -43,8 +44,7 @@ std::shared_ptr<IGameObject> createGameObjectFromDescription(const char descript
     case '8':        
         return std::make_shared<BetonWall>(BetonWall::EBetonWallType::Top, position, size, rotation, 0.f);
     case '9':        
-        return std::make_shared<BetonWall>(BetonWall::EBetonWallType::All, position, size, rotation, 0.f);
-    
+        return std::make_shared<BetonWall>(BetonWall::EBetonWallType::All, position, size, rotation, 0.f);    
     case 'A':        
         return std::make_shared<Water>(position, size, rotation, 0.f);
     case 'B':        
@@ -66,33 +66,21 @@ std::shared_ptr<IGameObject> createGameObjectFromDescription(const char descript
 Level::Level(const std::vector<std::string>& levelDescription) {
     if (levelDescription.empty()) {
         std::cerr << "Empty level description!" << std::endl;
-    }
-
-    //m_width = levelDescription[0].length();
-    //m_height = levelDescription.size();
+    }   
 
     m_widthBlocks = levelDescription[0].length();
     m_heightBlocks = levelDescription.size();
     m_widthPixels = static_cast<unsigned int>(m_widthBlocks * BLOCK_SIZE);
     m_heightPixels = static_cast<unsigned int>(m_heightBlocks * BLOCK_SIZE);
 
-    //m_playerRespawn_1 = { BLOCK_SIZE * (m_width / 2 - 1), BLOCK_SIZE / 2 };
-    //m_playerRespawn_2 = { BLOCK_SIZE * (m_width / 2 + 3), BLOCK_SIZE / 2 };    
-    //m_enemyRespawn_1 = { BLOCK_SIZE,                      BLOCK_SIZE * m_height - BLOCK_SIZE / 2 };
-    //m_enemyRespawn_2 = { BLOCK_SIZE * (m_width / 2 + 1),  BLOCK_SIZE * m_height - BLOCK_SIZE / 2 };
-    //m_enemyRespawn_3 = { BLOCK_SIZE * m_width ,           BLOCK_SIZE * m_height - BLOCK_SIZE / 2 };
-
     m_playerRespawn_1 = { BLOCK_SIZE * (m_widthBlocks / 2 - 1), BLOCK_SIZE / 2 };
     m_playerRespawn_2 = { BLOCK_SIZE * (m_widthBlocks / 2 + 3), BLOCK_SIZE / 2 };
     m_enemyRespawn_1 = { BLOCK_SIZE,                           BLOCK_SIZE * m_heightBlocks - BLOCK_SIZE / 2 };
     m_enemyRespawn_2 = { BLOCK_SIZE * (m_widthBlocks / 2 + 1), BLOCK_SIZE * m_heightBlocks - BLOCK_SIZE / 2 };
-    m_enemyRespawn_3 = { BLOCK_SIZE * m_widthBlocks,           BLOCK_SIZE * m_heightBlocks - BLOCK_SIZE / 2 };
-       
-    //m_levelObjects.reserve(m_width * m_height + 4);
-    //unsigned int currentBottomOffset = static_cast<unsigned int>(BLOCK_SIZE * (m_height - 1) + BLOCK_SIZE / 2.f);
+    m_enemyRespawn_3 = { BLOCK_SIZE * m_widthBlocks,           BLOCK_SIZE * m_heightBlocks - BLOCK_SIZE / 2 };      
+    
     m_levelObjects.reserve(m_widthBlocks * m_heightBlocks + 4);
     unsigned int currentBottomOffset = static_cast<unsigned int>(BLOCK_SIZE * (m_heightBlocks - 1) + BLOCK_SIZE / 2.f);
-
 
     for (const std::string& currentRow : levelDescription) {        
         unsigned int currentLeftOffset = BLOCK_SIZE;
@@ -127,19 +115,17 @@ Level::Level(const std::vector<std::string>& levelDescription) {
         }
         currentBottomOffset -= BLOCK_SIZE;
     }
-    // bottom border
-    //m_levelObjects.emplace_back(std::make_shared<Border>(glm::vec2(BLOCK_SIZE, 0.f), glm::vec2(m_width * BLOCK_SIZE, BLOCK_SIZE / 2.f), 0.f, 0.f));
-    m_levelObjects.emplace_back(std::make_shared<Border>(glm::vec2(BLOCK_SIZE, 0.f), glm::vec2(m_widthBlocks * BLOCK_SIZE, BLOCK_SIZE / 2.f), 0.f, 0.f));
-    // top border
-    //m_levelObjects.emplace_back(std::make_shared<Border>(glm::vec2(BLOCK_SIZE, m_height * BLOCK_SIZE + BLOCK_SIZE / 2.f), glm::vec2(m_width * BLOCK_SIZE, BLOCK_SIZE / 2.f), 0.f, 0.f));
-    m_levelObjects.emplace_back(std::make_shared<Border>(glm::vec2(BLOCK_SIZE, m_heightBlocks * BLOCK_SIZE + BLOCK_SIZE / 2.f), glm::vec2(m_widthBlocks * BLOCK_SIZE, BLOCK_SIZE / 2.f), 0.f, 0.f));
-    // left border
-    //m_levelObjects.emplace_back(std::make_shared<Border>(glm::vec2(0.f, 0.f), glm::vec2(BLOCK_SIZE, (m_height + 1) * BLOCK_SIZE), 0.f, 0.f));
-    m_levelObjects.emplace_back(std::make_shared<Border>(glm::vec2(0.f, 0.f), glm::vec2(BLOCK_SIZE, (m_heightBlocks + 1) * BLOCK_SIZE), 0.f, 0.f));
-
-    // right border
-    //m_levelObjects.emplace_back(std::make_shared<Border>(glm::vec2((m_width + 1) * BLOCK_SIZE, 0.f), glm::vec2(BLOCK_SIZE * 2.f, (m_height + 1) * BLOCK_SIZE), 0.f, 0.f));
+    
+    m_levelObjects.emplace_back(std::make_shared<Border>(glm::vec2(BLOCK_SIZE, 0.f), glm::vec2(m_widthBlocks * BLOCK_SIZE, BLOCK_SIZE / 2.f), 0.f, 0.f));    
+    m_levelObjects.emplace_back(std::make_shared<Border>(glm::vec2(BLOCK_SIZE, m_heightBlocks * BLOCK_SIZE + BLOCK_SIZE / 2.f), glm::vec2(m_widthBlocks * BLOCK_SIZE, BLOCK_SIZE / 2.f), 0.f, 0.f));    
+    m_levelObjects.emplace_back(std::make_shared<Border>(glm::vec2(0.f, 0.f), glm::vec2(BLOCK_SIZE, (m_heightBlocks + 1) * BLOCK_SIZE), 0.f, 0.f));    
     m_levelObjects.emplace_back(std::make_shared<Border>(glm::vec2((m_widthBlocks + 1) * BLOCK_SIZE, 0.f), glm::vec2(BLOCK_SIZE * 2.f, (m_heightBlocks + 1) * BLOCK_SIZE), 0.f, 0.f));
+}
+
+void Level::initPhysics() {
+    //m_pTank = std::make_shared<Tank>(0.05, get_playerRespawn_1(), glm::vec2(Level::BLOCK_SIZE, Level::BLOCK_SIZE), 0.f);
+    m_pTank = std::make_shared<Tank>(Tank::ETankType::Player1Yellow_type1, 0.05, get_playerRespawn_1(), glm::vec2(Level::BLOCK_SIZE, Level::BLOCK_SIZE), 0.f);
+    Physics::PhysicsEngine::addDynamicGameObject(m_pTank);
 }
 
 void Level::render() const {
@@ -148,6 +134,7 @@ void Level::render() const {
             currentLevelObject->render();
         }
     }
+    m_pTank->render();
 }
 
 void Level::update(const double delta) {
@@ -156,19 +143,40 @@ void Level::update(const double delta) {
             currentLevelObject->update(delta);
         }
     }
+    m_pTank->update(delta);
 }
- 
-//size_t Level::getLevelWidth() const {
+
+void Level::processInput(const std::array<bool, 349>& keys) {
+    if (keys[GLFW_KEY_W]) {
+        m_pTank->setOrientation(Tank::EOrientation::Top);
+        m_pTank->setVelocity(m_pTank->getMaxVelocity());
+    }
+    else if (keys[GLFW_KEY_A]) {
+        m_pTank->setOrientation(Tank::EOrientation::Left);
+        m_pTank->setVelocity(m_pTank->getMaxVelocity());
+    }
+    else if (keys[GLFW_KEY_D]) {
+        m_pTank->setOrientation(Tank::EOrientation::Right);
+        m_pTank->setVelocity(m_pTank->getMaxVelocity());
+    }
+    else if (keys[GLFW_KEY_S]) {
+        m_pTank->setOrientation(Tank::EOrientation::Bottom);
+        m_pTank->setVelocity(m_pTank->getMaxVelocity());
+    }
+    else {
+        m_pTank->setVelocity(0);
+    }
+
+    if (m_pTank && keys[GLFW_KEY_SPACE]) {
+        m_pTank->fire();
+    }
+} 
+
 unsigned int Level::getStateWidth() const {
-    //return (m_width + 3) * BLOCK_SIZE;
-    //return (m_widthBlocks + 3) * BLOCK_SIZE;
     return static_cast<unsigned int>((m_widthBlocks + 3) * BLOCK_SIZE);
 }
 
-//size_t Level::getLevelHeight() const {
 unsigned int Level::getStateHeight() const {
-    //return (m_height + 1) * BLOCK_SIZE;
-    //return (m_heightBlocks + 1) * BLOCK_SIZE;
     return static_cast<unsigned int>((m_heightBlocks + 1) * BLOCK_SIZE);
 }
 
@@ -210,8 +218,7 @@ std::vector<std::shared_ptr<IGameObject>> Level::getObjectsInArea(const glm::vec
     
     if (endY >= m_heightBlocks) {
         output.push_back(m_levelObjects[m_levelObjects.size() - 4]);
-    }
-    
+    }    
     return output;
 }
 

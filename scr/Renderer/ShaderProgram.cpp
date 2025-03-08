@@ -48,8 +48,7 @@ namespace RenderEngine {
 		GLint success;
 		glGetShaderiv(shaderID, GL_COMPILE_STATUS, &success);//result of compilation staus is writen into sucsess
 		if (!success) {//in case of error
-			GLchar infolog[1024];
-			//glGetShaderInfoLog(shaderID, 1024, nullptr, infolog);
+			GLchar infolog[1024];			
 			glGetProgramInfoLog(shaderID, 1024, nullptr, infolog);
 			std::cerr << "ERROR::SHADER: Compile time error:\n" << infolog << std::endl;
 			return false;//for createShader
@@ -96,5 +95,3 @@ namespace RenderEngine {
 		glUniformMatrix4fv(glGetUniformLocation(m_ID, name.c_str()), 1, GL_FALSE, glm::value_ptr(matrix));
 	}
 }
-
-

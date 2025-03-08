@@ -11,7 +11,6 @@
 
 #include "VertexArray.h"
 
-//loading textures to video adapter
 namespace RenderEngine {
 	class Texture2D;
 	class ShaderProgram;

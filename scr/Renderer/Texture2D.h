@@ -6,9 +6,7 @@
 #include <map>
 #include <glm/vec2.hpp> 
 
-//loading textures to video adapter
 namespace RenderEngine {
-
 	struct SubTexture2D {
 		glm::vec2 leftBottomUV;
 		glm::vec2 rightTopUV;	

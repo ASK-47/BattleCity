@@ -1,15 +1,12 @@
 #include "Texture2D.h"
 
-//loading textures to video adapter
 namespace RenderEngine {
 	Texture2D::Texture2D(const GLint width, GLint height,
 		const unsigned char* data,
 		const unsigned int channels,
 		const GLenum filter,
-		const GLenum wrapMode) : m_width (width), m_height(height)
-	{
-		switch (channels)
-		{
+		const GLenum wrapMode) : m_width (width), m_height(height) {
+		switch (channels) {
 		case 4://4 channels
 			m_mode = GL_RGBA;
 			break;;
@@ -23,17 +20,14 @@ namespace RenderEngine {
 		glGenTextures(1, &m_ID);//texture generation
 		glActiveTexture(GL_TEXTURE0);
 
-
 		glBindTexture(GL_TEXTURE_2D, m_ID);//making genereted texture current
 		glTexImage2D(GL_TEXTURE_2D, 0, m_mode, m_width, m_height, 0, m_mode, GL_UNSIGNED_BYTE, data);
-
-		//Tecture papameters
+		
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapMode);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapMode);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
 		glGenerateMipmap(GL_TEXTURE_2D);
-
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
