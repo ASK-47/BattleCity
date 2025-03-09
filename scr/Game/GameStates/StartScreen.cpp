@@ -65,13 +65,11 @@ std::shared_ptr<RenderEngine::Sprite> getSpriteForDescription(const char descrip
     return nullptr;
 }
 
-//StartScreen::StartScreen(const std::vector<std::string>& startScreenDescription) {
 StartScreen::StartScreen(const std::vector<std::string>&startScreenDescription, Game * pGame)
     : m_pGame(pGame)
     , m_currentMenuSelection(0)
     , m_keyReleased(true)
-    , m_menuSprite(std::make_pair(ResourceManager::getSprite("menu"), glm::vec2(11 * BLOCK_SIZE, STARTSCREEN_HEIGHT - startScreenDescription.size() * BLOCK_SIZE - MENU_HEIGHT - 5 * BLOCK_SIZE)))
-    //, m_tankSprite(std::make_pair(ResourceManager::getSprite("tankSprite_right"), glm::vec2(8 * BLOCK_SIZE, m_menuSprite.second.y + 6 * BLOCK_SIZE - m_currentMenuSelection * 2 * BLOCK_SIZE)))
+    , m_menuSprite(std::make_pair(ResourceManager::getSprite("menu"), glm::vec2(11 * BLOCK_SIZE, STARTSCREEN_HEIGHT - startScreenDescription.size() * BLOCK_SIZE - MENU_HEIGHT - 5 * BLOCK_SIZE)))    
     , m_tankSprite(std::make_pair(ResourceManager::getSprite("player1_yellow_tank_type1_sprite_right"), glm::vec2(8 * BLOCK_SIZE, m_menuSprite.second.y + 6 * BLOCK_SIZE - m_currentMenuSelection * 2 * BLOCK_SIZE)))
 
     , m_tankSpriteAnimator(m_tankSprite.first) {    
@@ -140,7 +138,12 @@ void StartScreen::processInput(const std::array<bool, 349>& keys) {
         switch (m_currentMenuSelection)
         {
         case 0:
-            m_pGame->startNewLevel(0);            
+            //m_pGame->startNewLevel(0);
+            m_pGame->startNewLevel(0, Game::EGameMode::OnePlayer);
+            break;
+        case 1:
+            m_pGame->startNewLevel(0, Game::EGameMode::TwoPlayers);
+            break;
         default:
             break;
         }

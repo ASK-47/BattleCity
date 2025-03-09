@@ -6,6 +6,7 @@
 #include "IGameObject.h"
 #include "../../Renderer/SpriteAnimator.h"
 #include "../../System/Timer.h"
+#include "../AIComponent.h"
 
 namespace RenderEngine {    
     class Sprite;
@@ -70,8 +71,7 @@ public:
         "enemy_red_tank_type4_sprite"
     };
 
-    enum class EOrientation : uint8_t
-    {//tank orientation
+    enum class EOrientation : uint8_t {//tank orientation
         Top,
         Bottom,
         Left,
@@ -79,6 +79,9 @@ public:
     };
 
     Tank(const Tank::ETankType eType
+        , const bool bHasAI
+        , const bool bShieldOnSpawn
+        , const EOrientation eOrientation
         , const double maxVelocity
         , const glm::vec2& position
         , const glm::vec2& size
@@ -118,6 +121,8 @@ private://varibles
     double m_maxVelocity;
     bool m_isSpawning;
     bool m_hasShield;
+    bool m_bShieldOnSpawn;
+    std::unique_ptr<AIComponent> m_pAIComponent;
 
     static const std::string& getTankSpriteFromType(const ETankType eType);   
 };

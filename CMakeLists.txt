@@ -85,6 +85,9 @@ add_executable(${PROJECT_NAME}
 
 	scr/Game/GameObjects/Bullet.cpp
 	scr/Game/GameObjects/Bullet.h
+	
+	scr/Game/AIComponent.cpp
+	scr/Game/AIComponent.h
 )
 
 set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${PROJECT_NAME})

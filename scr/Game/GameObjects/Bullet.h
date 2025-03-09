@@ -28,8 +28,7 @@ public:
     virtual void render() const override;
     void update(const double delta) override;
     bool isActive() const { return m_isActive; }
-    void fire(const glm::vec2& position, const glm::vec2& direction);
-    //virtual void onCollision() override;
+    void fire(const glm::vec2& position, const glm::vec2& direction);  
 
 private:
     glm::vec2 m_explosionSize;
